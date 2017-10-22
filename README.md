@@ -1,0 +1,1 @@
+# Imgur-Uploader-Firefox
