@@ -10,9 +10,19 @@ document.querySelector("#add-image").addEventListener('click', function() {
   document.querySelector("#add-file").click();
 });
 
-document.querySelector("#add-file").addEventListener('change', function() {
-  if (this.value) {
-    uploader.upload(this.value);
+
+
+
+
+
+
+
+
+
+document.querySelector("#add-file").addEventListener('change', function(e) {
+  console.log(this.files[0]);
+  if (this.files[0]) {
+    uploader.upload(this.files[0]);
   } else {
     console.log("ファイルが未選択");
   }

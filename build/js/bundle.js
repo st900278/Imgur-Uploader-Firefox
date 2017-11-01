@@ -82,9 +82,10 @@ document.querySelector("#add-image").addEventListener('click', function () {
   document.querySelector("#add-file").click();
 });
 
-document.querySelector("#add-file").addEventListener('change', function () {
-  if (this.value) {
-    uploader.upload(this.value);
+document.querySelector("#add-file").addEventListener('change', function (e) {
+  console.log(this.files[0]);
+  if (this.files[0]) {
+    uploader.upload(this.files[0]);
   } else {
     console.log("ファイルが未選択");
   }
@@ -116,54 +117,30 @@ module.exports = function () {
   _createClass(Uploader, [{
     key: "upload",
     value: function upload(image) {
-      console.log("image");
-      console.log(image);
-      var canvas = document.createElement("canvas");
-      var ctx = canvas.getContext("2d");
-      var tempImg = new Image();
-      tempImg.onload = function () {
-        canvas.width = tempImg.width;
-        canvas.height = tempImg.height;
-        ctx.drawImage(tempImg, 0, 0, tempImg.width, tempImg.height);
-        console.log(canvas.toDataURL());
-      };
-      reader.onload = function () {
-        var result = reader.result;
-      };
-      reader.readAsDataURL(image);
-      /*
-      console.log(image);
-      var xhr = new XMLHttpRequest();
+      var reader = new FileReader();
       var that = this;
       console.log("test");
-      xhr.open("GET", image, true);
-      xhr.responseType = "blob";
-      xhr.onload = function(e) {
-      console.log(this.response);
-      var reader = new FileReader();
-      reader.onload = function(event) {
-        var res = event.target.result;
-        console.log(res)
+      reader.onload = function (e) {
+        var dataURL = e.target.result;
+        console.log(dataURL);
         var options = {
           url: "https://api.imgur.com/3/image",
           headers: {
             authorization: "Client-ID " + that.clientID
           },
           json: {
-            image: res.split("data:application/xml;base64,")[1]
+            image: dataURL.split("base64,")[1]
           }
-         };
+
+        };
         console.log(options);
-        request.post(options, function(error, res, body) {
-            console.log(body.data);
+        request.post(options, function (error, res, body) {
+          console.log(body.data);
           return body.data.link;
         });
-       }
-      var file = this.response;
-      reader.readAsDataURL(file)
       };
-      xhr.send()
-      */
+
+      reader.readAsDataURL(image);
     }
   }]);
 
