@@ -3,7 +3,7 @@ const path = require("path")
 module.exports = {
     entry: './src/app.js',
     output: {
-        path: __dirname + "/build",
+        path: __dirname + "/build/js",
         filename: 'bundle.js'
     },
     devtool: 'source-map',

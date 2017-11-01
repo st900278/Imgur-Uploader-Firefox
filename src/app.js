@@ -1,16 +1,19 @@
+var Uploader = require("./uploader.js");
 
-class Uploader{
-    construction(){
-        this.clientID = "a6bebdd6a51f656";
-        this.clientSecret = "e214c0bd81a3d82e1bdb2af5d86ac9db04851505";
-    }
-    upload(a){
-        console.log(a)
-    }
-}
+var uploader = new Uploader();
+
+//uploader.upload('/test/cat.jpg');
 
 
+document.querySelector("#add-image").addEventListener('click', function() {
+  console.log("test");
+  document.querySelector("#add-file").click();
+});
 
-var uploader = new Uploader()
-
-uploader.upload("test")
+document.querySelector("#add-file").addEventListener('change', function() {
+  if (this.value) {
+    uploader.upload(this.value);
+  } else {
+    console.log("ファイルが未選択");
+  }
+});
