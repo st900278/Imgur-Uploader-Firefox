@@ -1,10 +1,13 @@
 const path = require("path")
 
 module.exports = {
-    entry: './src/app.js',
+    entry: {
+        popup: './src/app.js',
+        upload_panel: './src/upload_panel.js'
+    },
     output: {
         path: __dirname + "/build/js",
-        filename: 'bundle.js'
+        filename: '[name].bundle.js'
     },
     devtool: 'source-map',
 

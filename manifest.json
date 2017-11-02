@@ -9,8 +9,11 @@
   "icons": {
     "48": "icons/border-48.png"
   },
+  "permissions":[
+      "storage"
+  ],
   "browser_action":{
-      "default_popup": "popup/main.html"
+      "default_popup": "templates/popup.html"
   }
 
 }

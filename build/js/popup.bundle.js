@@ -72,7 +72,41 @@
 
 //uploader.upload('/test/cat.jpg');
 
+browser.storage.local.get('imgur').then(function (value) {
+    console.log(value);
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+        for (var _iterator = value['imgur'].reverse()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var x = _step.value;
+
+            var trNode = document.createElement("tr");
+            var tdNode = document.createElement("td");
+            var textNode = document.createTextNode(x.link);
+            tdNode.appendChild(textNode);
+            trNode.appendChild(tdNode);
+            document.getElementById("image-list").appendChild(trNode);
+        }
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+            }
+        } finally {
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
+    }
+});
+
 document.querySelector("#add-image").addEventListener('click', function () {
+
     var createData = {
         type: "detached_panel",
         url: "../templates/panel.html",
@@ -85,4 +119,4 @@ document.querySelector("#add-image").addEventListener('click', function () {
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=bundle.js.map
+//# sourceMappingURL=popup.bundle.js.map
