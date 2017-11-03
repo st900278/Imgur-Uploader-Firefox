@@ -72,9 +72,11 @@
 
 
 var Uploader = __webpack_require__(2);
+var Storage = __webpack_require__(4);
 
 var uploader = new Uploader();
-window.moveTo(0, 0);
+var storage = new Storage();
+
 document.querySelector("#add-image").addEventListener('click', function () {
 
     console.log("test");
@@ -84,7 +86,7 @@ document.querySelector("#add-image").addEventListener('click', function () {
 document.querySelector("#add-file").addEventListener('change', function (e) {
     console.log(this.files[0]);
     if (this.files[0]) {
-        uploader.uploader(this.files[0]);
+        uploader.uploader(this.files[0]).then(storage.add);
     } else {
         console.log("ファイルが未選択");
     }
@@ -96,8 +98,6 @@ document.querySelector("#add-file").addEventListener('change', function (e) {
 
 "use strict";
 
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -160,27 +160,7 @@ module.exports = function () {
     }, {
         key: "uploader",
         value: function uploader(image) {
-            var uploadId = this.imageReader(image).then(this.uploadToImgur.bind(this));
-            var checkStorage = browser.storage.local.get("imgur");
-            Promise.all([uploadId, checkStorage]).then(function (_ref) {
-                var _ref2 = _slicedToArray(_ref, 2),
-                    uploadId = _ref2[0],
-                    storage = _ref2[1];
-
-                console.log(storage);
-                var send = [];
-                if (Object.getOwnPropertyNames(storage).length > 0) {
-                    send = storage['imgur'];
-                    console.log("not empty");
-                    console.log(send);
-                }
-                console.log(send);
-                send.push(uploadId);
-                //console.log(storage);
-                browser.storage.local.set({ 'imgur': send }).then(function (value) {
-                    window.close();
-                });
-            });
+            return this.imageReader(image).then(this.uploadToImgur.bind(this));
         }
     }]);
 
@@ -689,6 +669,85 @@ function b64_enc (data) {
 }));
 //UMD FOOTER END
 
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+module.exports = function () {
+    function Storage() {
+        _classCallCheck(this, Storage);
+
+        browser.storage.local.get("imgur").then(function (obj) {
+            if (Object.getOwnPropertyNames(obj).length == 0) {
+                console.log("test");
+                browser.storage.local.set({
+                    'imgur': []
+                });
+            }
+        });
+    }
+
+    _createClass(Storage, [{
+        key: "add",
+        value: function add(image) {
+            var checkStorage = browser.storage.local.get("imgur").then(function (obj) {
+                var send = obj['imgur'];
+
+                send.push(image);
+                browser.storage.local.set({
+                    'imgur': send
+                });
+            });
+        }
+    }, {
+        key: "remove",
+        value: function remove(imageId) {
+            var checkStorage = browser.storage.local.get("imgur").then(function (obj) {
+                var send = [];
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = obj['imgur'][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var img = _step.value;
+
+                        if (img.id != imageId) {
+                            send.push(img);
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+
+                browser.storage.local.set({
+                    'imgur': send
+                });
+            });
+        }
+    }]);
+
+    return Storage;
+}();
 
 /***/ })
 /******/ ]);

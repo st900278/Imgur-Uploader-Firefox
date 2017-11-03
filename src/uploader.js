@@ -43,23 +43,7 @@ module.exports = class Uploader {
     }
 
     uploader(image) {
-        var uploadId = this.imageReader(image).then(this.uploadToImgur.bind(this));
-        var checkStorage = browser.storage.local.get("imgur");
-        Promise.all([uploadId, checkStorage]).then(([uploadId, storage]) => {
-            console.log(storage);
-            var send = [];
-            if(Object.getOwnPropertyNames(storage).length > 0){
-                send = storage['imgur'];
-                console.log("not empty");
-                console.log(send);
-            }
-            console.log(send);
-            send.push(uploadId);
-            //console.log(storage);
-            browser.storage.local.set({'imgur': send}).then(value => {
-                window.close();
-            });
-        });
+        return this.imageReader(image).then(this.uploadToImgur.bind(this));
     }
 
 }

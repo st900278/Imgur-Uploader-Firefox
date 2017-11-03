@@ -70,6 +70,9 @@
 "use strict";
 
 
+var Storage = __webpack_require__(4);
+var storage = new Storage();
+
 browser.storage.local.get('imgur').then(function (value) {
     console.log(value);
     var _iteratorNormalCompletion = true;
@@ -80,8 +83,8 @@ browser.storage.local.get('imgur').then(function (value) {
         for (var _iterator = value['imgur'].reverse()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var x = _step.value;
 
-            $(document.getElementById("image-list")).append('<div class="callout small" data-closable >\
-            <p>' + x.link + '</p>\
+            $(document.getElementById("image-list")).append('<div class="callout small image-url" data-closable >\
+            <p><img src="https://i.imgur.com/' + x.id + '.jpg" class="preview">' + x.link + '</p>\
             <button class="close-button" aria-label="Dismiss alert" type="button"  id="' + x.id + '" data-close>\
             <span aria-hidden="true">&times;</span>\
             </button>\
@@ -110,8 +113,26 @@ function hasClass(elem, className) {
 document.addEventListener('click', function (e) {
     if (hasClass(e.target, 'close-button')) {
         console.log(e.target.id);
-        // .bu clicked
-        // Do your thing
+        storage.remove(e.target.id);
+    }
+}, false);
+
+document.addEventListener('mouseover', function (e) {
+    if (hasClass(e.target, 'preview')) {
+        console.log(e.pageX);
+        console.log(e.pageY);
+        var viewer = $(document.querySelector("div.viewer"));
+        viewer.show().css({
+            left: "100px",
+            top: e.pageY - 30
+        });
+        viewer.children("img").attr("src", "https://i.imgur.com/qebpT9M.jpg");
+    }
+}, false);
+
+document.addEventListener('mouseout', function (e) {
+    if (hasClass(e.target, 'preview')) {
+        $(document.querySelector("div.viewer")).hide();
     }
 }, false);
 
@@ -126,6 +147,88 @@ document.querySelector("#add-image").addEventListener('click', function () {
     var creating = browser.windows.create(createData);
     console.log("test");
 });
+
+/***/ }),
+/* 1 */,
+/* 2 */,
+/* 3 */,
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+module.exports = function () {
+    function Storage() {
+        _classCallCheck(this, Storage);
+
+        browser.storage.local.get("imgur").then(function (obj) {
+            if (Object.getOwnPropertyNames(obj).length == 0) {
+                console.log("test");
+                browser.storage.local.set({
+                    'imgur': []
+                });
+            }
+        });
+    }
+
+    _createClass(Storage, [{
+        key: "add",
+        value: function add(image) {
+            var checkStorage = browser.storage.local.get("imgur").then(function (obj) {
+                var send = obj['imgur'];
+
+                send.push(image);
+                browser.storage.local.set({
+                    'imgur': send
+                });
+            });
+        }
+    }, {
+        key: "remove",
+        value: function remove(imageId) {
+            var checkStorage = browser.storage.local.get("imgur").then(function (obj) {
+                var send = [];
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = obj['imgur'][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var img = _step.value;
+
+                        if (img.id != imageId) {
+                            send.push(img);
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+
+                browser.storage.local.set({
+                    'imgur': send
+                });
+            });
+        }
+    }]);
+
+    return Storage;
+}();
 
 /***/ })
 /******/ ]);
