@@ -3,22 +3,25 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="../build/css/foundation.css"/>
-  <link rel="stylesheet" href="../build/css/module.css" />
+      <meta charset="utf-8">
+      <link rel="stylesheet" href="../build/css/foundation.css" />
+      <link rel="stylesheet" href="../build/css/module.css" />
 </head>
 
 <body>
-  <div class="grid-x">
-    <div class="cell">
-        <button class="button expanded" id="add-image">Add Image</button>
-        <input type="file" class="hide" id="add-file">
-    </div>
-  </div>
-  <script src="../build/js/jquery.js"></script>
-  <script src="../build/js/foundation.js"></script>
+      <div class="grid-x">
+            <div class="cell">
+                  <div class="drag-area" id="add-image">
+                        <img id="drag-icon" src="../build/image/drag.png"><br>
+                        <a id="click-image">Choose a file</a> or drag it here.</button>
+                        <input type="file" class="hide" id="add-file">
+                  </div>
+            </div>
+      </div>
+      <script src="../build/js/jquery.js"></script>
+      <script src="../build/js/foundation.js"></script>
 
-  <script src="../build/js/upload_panel.bundle.js"></script>
+      <script src="../build/js/upload_panel.bundle.js"></script>
 </body>
 
 </html>

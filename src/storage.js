@@ -12,14 +12,19 @@ module.exports = class Storage {
     }
 
     add(image) {
-        var checkStorage = browser.storage.local.get("imgur").then((obj) => {
-            var send = obj['imgur'];
+        return new Promise((resolve, reject)=>{
+            var checkStorage = browser.storage.local.get("imgur").then((obj) => {
+                var send = obj['imgur'];
 
-            send.push(image);
-            browser.storage.local.set({
-                'imgur': send
+                send.push(image);
+                browser.storage.local.set({
+                    'imgur': send
+                }).then(()=>{
+                    resolve("test");
+                });
             });
         });
+
 
     }
 

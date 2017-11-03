@@ -7,7 +7,7 @@
   "description": "Image Upload addon for firefox",
 
   "icons": {
-    "48": "icons/border-48.png"
+    "48": "./icons/favicon.png"
   },
   "permissions":[
       "storage"

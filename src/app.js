@@ -28,12 +28,14 @@ document.addEventListener('mouseover', function (e) {
     if (hasClass(e.target, 'preview')) {
         console.log(e.pageX);
         console.log(e.pageY);
+        console.log(e.target.attributes);
         var viewer = $(document.querySelector("div.viewer"));
         viewer.show().css({
             left: "100px",
             top: e.pageY-30
         });
-        viewer.children("img").attr("src", "https://i.imgur.com/qebpT9M.jpg");
+
+        viewer.children("img").attr("src", e.target.getAttribute("src"));
 
 
     }

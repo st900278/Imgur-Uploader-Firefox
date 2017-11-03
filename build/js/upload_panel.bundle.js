@@ -60,40 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */,
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var Uploader = __webpack_require__(2);
-var Storage = __webpack_require__(4);
-
-var uploader = new Uploader();
-var storage = new Storage();
-
-document.querySelector("#add-image").addEventListener('click', function () {
-
-    console.log("test");
-    document.querySelector("#add-file").click();
-});
-
-document.querySelector("#add-file").addEventListener('change', function (e) {
-    console.log(this.files[0]);
-    if (this.files[0]) {
-        uploader.uploader(this.files[0]).then(storage.add);
-    } else {
-        console.log("ファイルが未選択");
-    }
-});
-
-/***/ }),
-/* 2 */
+/* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -103,7 +74,142 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var request = __webpack_require__(3);
+module.exports = function () {
+    function Storage() {
+        _classCallCheck(this, Storage);
+
+        browser.storage.local.get("imgur").then(function (obj) {
+            if (Object.getOwnPropertyNames(obj).length == 0) {
+                console.log("test");
+                browser.storage.local.set({
+                    'imgur': []
+                });
+            }
+        });
+    }
+
+    _createClass(Storage, [{
+        key: "add",
+        value: function add(image) {
+            return new Promise(function (resolve, reject) {
+                var checkStorage = browser.storage.local.get("imgur").then(function (obj) {
+                    var send = obj['imgur'];
+
+                    send.push(image);
+                    browser.storage.local.set({
+                        'imgur': send
+                    }).then(function () {
+                        resolve("test");
+                    });
+                });
+            });
+        }
+    }, {
+        key: "remove",
+        value: function remove(imageId) {
+            var checkStorage = browser.storage.local.get("imgur").then(function (obj) {
+                var send = [];
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = obj['imgur'][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var img = _step.value;
+
+                        if (img.id != imageId) {
+                            send.push(img);
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+
+                browser.storage.local.set({
+                    'imgur': send
+                });
+            });
+        }
+    }]);
+
+    return Storage;
+}();
+
+/***/ }),
+/* 1 */,
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Uploader = __webpack_require__(3);
+var Storage = __webpack_require__(0);
+
+var uploader = new Uploader();
+var storage = new Storage();
+
+document.querySelector("#add-image").addEventListener('click', function () {});
+
+document.querySelector("#add-image").addEventListener('dragover', function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    this.style.background = "grey";
+}, false);
+
+document.querySelector("#add-image").addEventListener('dragleave', function () {
+    this.style.background = "white";
+});
+
+document.querySelector("#add-image").addEventListener('drop', function (e) {
+    this.style.background = "white";
+    e.preventDefault();
+    var files = e.target.files || e.dataTransfer.files;
+    uploader.uploader(files[0]).then(storage.add).then(function () {
+        window.close();
+    });
+}, false);
+
+document.querySelector("#click-image").addEventListener('click', function () {
+
+    document.querySelector("#add-file").click();
+    return false;
+}, false);
+
+document.querySelector("#add-file").addEventListener('change', function (e) {
+    console.log(this.files[0]);
+    if (this.files[0]) {
+        uploader.uploader(this.files[0]).then(storage.add).then(function () {
+            window.close();
+        });
+    } else {
+        console.log("ファイルが未選択");
+    }
+});
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var request = __webpack_require__(4);
 module.exports = function () {
     function Uploader() {
         var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "a6bebdd6a51f656";
@@ -168,7 +274,7 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// Browser Request
@@ -669,85 +775,6 @@ function b64_enc (data) {
 }));
 //UMD FOOTER END
 
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-module.exports = function () {
-    function Storage() {
-        _classCallCheck(this, Storage);
-
-        browser.storage.local.get("imgur").then(function (obj) {
-            if (Object.getOwnPropertyNames(obj).length == 0) {
-                console.log("test");
-                browser.storage.local.set({
-                    'imgur': []
-                });
-            }
-        });
-    }
-
-    _createClass(Storage, [{
-        key: "add",
-        value: function add(image) {
-            var checkStorage = browser.storage.local.get("imgur").then(function (obj) {
-                var send = obj['imgur'];
-
-                send.push(image);
-                browser.storage.local.set({
-                    'imgur': send
-                });
-            });
-        }
-    }, {
-        key: "remove",
-        value: function remove(imageId) {
-            var checkStorage = browser.storage.local.get("imgur").then(function (obj) {
-                var send = [];
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = obj['imgur'][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var img = _step.value;
-
-                        if (img.id != imageId) {
-                            send.push(img);
-                        }
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-
-                browser.storage.local.set({
-                    'imgur': send
-                });
-            });
-        }
-    }]);
-
-    return Storage;
-}();
 
 /***/ })
 /******/ ]);
