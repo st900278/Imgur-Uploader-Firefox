@@ -4,4 +4,10 @@
 
 | User      | Pull Request           | Status  |
 | ------------- |:-------------:| -----:|
-| [lily20531]  | Icon Design | Merged |
+
+
+#### Other Support
+
+| User      | Work  |
+| ------------- |:-------------:| -----:|
+| lily20531  | Icon Design  |
