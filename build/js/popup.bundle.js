@@ -192,7 +192,6 @@ browser.storage.local.get('imgur').then(function (value) {
 function hasClass(elem, className) {
     return elem.className.split(' ').indexOf(className) > -1;
 }
-
 document.addEventListener('click', function (e) {
     if (hasClass(e.target, 'close-button')) {
         console.log(e.target.id);

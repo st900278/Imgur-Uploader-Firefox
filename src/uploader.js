@@ -9,7 +9,7 @@ module.exports = class Uploader {
         let reader = new FileReader();
         return new Promise((resolve, reject) => {
             reader.onload = (event) => {
-                resolve(event.target.result);
+                resolve(event.target.result.split("base64,")[1]);
             };
 
             reader.onerror = () => {
@@ -21,7 +21,7 @@ module.exports = class Uploader {
         })
     }
 
-    uploadToImgur(base64){
+    uploadToImgur(file){
         var that = this;
         return new Promise((resolve, reject) => {
             console.log(this);
@@ -31,7 +31,7 @@ module.exports = class Uploader {
                     authorization: "Client-ID " + that.clientID
                 },
                 json: {
-                    image: base64.split("base64,")[1]
+                    image: file
                 }
 
             };

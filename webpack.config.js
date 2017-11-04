@@ -3,7 +3,8 @@ const path = require("path")
 module.exports = {
     entry: {
         popup: './src/app.js',
-        upload_panel: './src/upload_panel.js'
+        upload_panel: './src/upload_panel.js',
+        background: './src/background.js'
     },
     output: {
         path: __dirname + "/build/js",

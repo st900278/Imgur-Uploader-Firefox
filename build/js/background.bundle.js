@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -148,57 +148,7 @@ module.exports = function () {
 
 /***/ }),
 /* 1 */,
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var Uploader = __webpack_require__(3);
-var Storage = __webpack_require__(0);
-
-var uploader = new Uploader();
-var storage = new Storage();
-
-document.querySelector("#add-image").addEventListener('click', function () {});
-
-document.querySelector("#add-image").addEventListener('dragover', function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-    this.style.background = "grey";
-}, false);
-
-document.querySelector("#add-image").addEventListener('dragleave', function () {
-    this.style.background = "white";
-});
-
-document.querySelector("#add-image").addEventListener('drop', function (e) {
-    this.style.background = "white";
-    e.preventDefault();
-    var files = e.target.files || e.dataTransfer.files;
-    uploader.uploader(files[0]).then(storage.add).then(function () {
-        window.close();
-    });
-}, false);
-
-document.querySelector("#click-image").addEventListener('click', function () {
-
-    document.querySelector("#add-file").click();
-    return false;
-}, false);
-
-document.querySelector("#add-file").addEventListener('change', function (e) {
-    console.log(this.files[0]);
-    if (this.files[0]) {
-        uploader.uploader(this.files[0]).then(storage.add).then(function () {
-            window.close();
-        });
-    } else {
-        console.log("ファイルが未選択");
-    }
-});
-
-/***/ }),
+/* 2 */,
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -776,6 +726,43 @@ function b64_enc (data) {
 //UMD FOOTER END
 
 
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Uploader = __webpack_require__(3);
+var Storage = __webpack_require__(0);
+
+var uploader = new Uploader();
+var storage = new Storage();
+
+function onCreated() {
+  if (browser.runtime.lastError) {
+    console.log("error creating item:" + browser.runtime.lastError);
+  } else {
+    console.log("item created successfully");
+  }
+}
+
+browser.menus.create({
+  id: "image-select",
+  type: "normal",
+  title: "Upload to Imgur",
+  contexts: ["all"],
+  checked: false
+}, onCreated);
+
+browser.menus.onClicked.addListener(function (info, tab) {
+  if (info.mediaType == "image") {
+    console.log(info.srcUrl);
+    console.log(info);
+    uploader.uploadToImgur(info.srcUrl).then(storage.add);
+  }
+});
+
 /***/ })
 /******/ ]);
-//# sourceMappingURL=upload_panel.bundle.js.map
+//# sourceMappingURL=background.bundle.js.map
