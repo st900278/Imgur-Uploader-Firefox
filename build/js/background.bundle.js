@@ -745,6 +745,8 @@ var Storage = __webpack_require__(0);
 var uploader = new Uploader();
 var storage = new Storage();
 
+browser.browserAction.setIcon({ path: "../icons/favicon.png" });
+
 function onCreated() {
     if (browser.runtime.lastError) {
         console.log("error creating item:" + browser.runtime.lastError);
