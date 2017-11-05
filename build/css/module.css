@@ -26,8 +26,9 @@ div.viewer{
     position: absolute;
 }
 
-p {
+span.link {
     margin: 0px;
+    padding: 10px;
     color: #4c4a37;
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 15px;

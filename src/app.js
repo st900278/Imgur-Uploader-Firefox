@@ -4,8 +4,11 @@ var storage = new Storage();
 browser.storage.local.get('imgur').then((value) =>{
     console.log(value);
     for(let x of value['imgur'].reverse()){
+        if(x == undefined || x.link == undefined){
+            continue;
+        }
         $(document.getElementById("image-list")).append('<div class="callout small image-url" data-closable >\
-            <p><img src="https://i.imgur.com/'+x.id+'.jpg" class="preview">'+x.link+'</p>\
+            <p><img src="https://i.imgur.com/'+x.id+'.jpg" class="preview"> <span class="link">'+x.link+'</span</p>\
             <button class="close-button" aria-label="Dismiss alert" type="button"  id="'+x.id+'" data-close>\
             <span aria-hidden="true">&times;</span>\
             </button>\

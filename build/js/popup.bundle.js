@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -94,8 +94,9 @@ module.exports = function () {
             return new Promise(function (resolve, reject) {
                 var checkStorage = browser.storage.local.get("imgur").then(function (obj) {
                     var send = obj['imgur'];
-
+                    console.log(image);
                     send.push(image);
+                    console.log(send);
                     browser.storage.local.set({
                         'imgur': send
                     }).then(function () {
@@ -147,7 +148,9 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 1 */
+/* 1 */,
+/* 2 */,
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -166,8 +169,11 @@ browser.storage.local.get('imgur').then(function (value) {
         for (var _iterator = value['imgur'].reverse()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var x = _step.value;
 
+            if (x == undefined || x.link == undefined) {
+                continue;
+            }
             $(document.getElementById("image-list")).append('<div class="callout small image-url" data-closable >\
-            <p><img src="https://i.imgur.com/' + x.id + '.jpg" class="preview">' + x.link + '</p>\
+            <p><img src="https://i.imgur.com/' + x.id + '.jpg" class="preview"> <span class="link">' + x.link + '</span</p>\
             <button class="close-button" aria-label="Dismiss alert" type="button"  id="' + x.id + '" data-close>\
             <span aria-hidden="true">&times;</span>\
             </button>\

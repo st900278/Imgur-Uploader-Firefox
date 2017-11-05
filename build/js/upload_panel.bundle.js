@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -94,8 +94,9 @@ module.exports = function () {
             return new Promise(function (resolve, reject) {
                 var checkStorage = browser.storage.local.get("imgur").then(function (obj) {
                     var send = obj['imgur'];
-
+                    console.log(image);
                     send.push(image);
+                    console.log(send);
                     browser.storage.local.set({
                         'imgur': send
                     }).then(function () {
@@ -147,59 +148,7 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 1 */,
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var Uploader = __webpack_require__(3);
-var Storage = __webpack_require__(0);
-
-var uploader = new Uploader();
-var storage = new Storage();
-
-document.querySelector("#add-image").addEventListener('click', function () {});
-
-document.querySelector("#add-image").addEventListener('dragover', function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-    this.style.background = "grey";
-}, false);
-
-document.querySelector("#add-image").addEventListener('dragleave', function () {
-    this.style.background = "white";
-});
-
-document.querySelector("#add-image").addEventListener('drop', function (e) {
-    this.style.background = "white";
-    e.preventDefault();
-    var files = e.target.files || e.dataTransfer.files;
-    uploader.uploader(files[0]).then(storage.add).then(function () {
-        window.close();
-    });
-}, false);
-
-document.querySelector("#click-image").addEventListener('click', function () {
-
-    document.querySelector("#add-file").click();
-    return false;
-}, false);
-
-document.querySelector("#add-file").addEventListener('change', function (e) {
-    console.log(this.files[0]);
-    if (this.files[0]) {
-        uploader.uploader(this.files[0]).then(storage.add).then(function () {
-            window.close();
-        });
-    } else {
-        console.log("ファイルが未選択");
-    }
-});
-
-/***/ }),
-/* 3 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -209,7 +158,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var request = __webpack_require__(4);
+var request = __webpack_require__(2);
 module.exports = function () {
     function Uploader() {
         var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "a6bebdd6a51f656";
@@ -259,7 +208,12 @@ module.exports = function () {
                 };
                 console.log(options);
                 request.post(options, function (error, res, body) {
-                    resolve(body.data);
+                    console.log(body.data);
+                    if (body.data.error) {
+                        reject(body.data);
+                    } else {
+                        resolve(body.data);
+                    }
                 });
             });
         }
@@ -274,7 +228,7 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 4 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// Browser Request
@@ -775,6 +729,82 @@ function b64_enc (data) {
 }));
 //UMD FOOTER END
 
+
+/***/ }),
+/* 3 */,
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Uploader = __webpack_require__(1);
+var Storage = __webpack_require__(0);
+
+var uploader = new Uploader();
+var storage = new Storage();
+
+function getExtension(filename) {
+    var parts = filename.split('.');
+    return parts[parts.length - 1];
+}
+
+function isImage(filename) {
+    var ext = getExtension(filename);
+    switch (ext.toLowerCase()) {
+        case 'jpg':
+        case 'jpeg':
+        case 'gif':
+        case 'bmp':
+        case 'png':
+            //etc
+            return true;
+    }
+    return false;
+}
+
+function removeEvent() {
+    document.querySelector("#add-image").removeEventListener('drop', uploadEvent, false);
+    document.querySelector("#add-file").removeEventListener('change', uploadEvent, false);
+}
+
+function uploadEvent(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    var files = e.target.files || e.dataTransfer.files;
+    if (isImage(files[0].name)) {
+        removeEvent();
+        document.querySelector("#drag-icon").setAttribute("src", "../build/image/loading.png");
+        console.log(document.querySelector("#drag-icon").getAttribute("src"));
+        uploader.uploader(files[0]).then(storage.add).then(function () {
+            window.close();
+        });
+    }
+}
+
+document.querySelector("#add-image").addEventListener('dragover', function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    this.style.background = "grey";
+}, false);
+
+document.querySelector("#add-image").addEventListener('dragleave', function () {
+    this.style.background = "white";
+});
+
+document.querySelector("#add-image").addEventListener('drop', function (e) {
+    this.style.background = "white";
+}, false);
+
+document.querySelector("#add-image").addEventListener('drop', uploadEvent, false);
+
+document.querySelector("#click-image").addEventListener('click', function () {
+
+    document.querySelector("#add-file").click();
+    return false;
+}, false);
+
+document.querySelector("#add-file").addEventListener('change', uploadEvent, false);
 
 /***/ })
 /******/ ]);

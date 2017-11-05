@@ -94,8 +94,9 @@ module.exports = function () {
             return new Promise(function (resolve, reject) {
                 var checkStorage = browser.storage.local.get("imgur").then(function (obj) {
                     var send = obj['imgur'];
-
+                    console.log(image);
                     send.push(image);
+                    console.log(send);
                     browser.storage.local.set({
                         'imgur': send
                     }).then(function () {
@@ -147,9 +148,7 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 1 */,
-/* 2 */,
-/* 3 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -159,7 +158,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var request = __webpack_require__(4);
+var request = __webpack_require__(2);
 module.exports = function () {
     function Uploader() {
         var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "a6bebdd6a51f656";
@@ -209,7 +208,12 @@ module.exports = function () {
                 };
                 console.log(options);
                 request.post(options, function (error, res, body) {
-                    resolve(body.data);
+                    console.log(body.data);
+                    if (body.data.error) {
+                        reject(body.data);
+                    } else {
+                        resolve(body.data);
+                    }
                 });
             });
         }
@@ -224,7 +228,7 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 4 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// Browser Request
@@ -727,40 +731,62 @@ function b64_enc (data) {
 
 
 /***/ }),
+/* 3 */,
+/* 4 */,
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Uploader = __webpack_require__(3);
+var Uploader = __webpack_require__(1);
 var Storage = __webpack_require__(0);
 
 var uploader = new Uploader();
 var storage = new Storage();
 
 function onCreated() {
-  if (browser.runtime.lastError) {
-    console.log("error creating item:" + browser.runtime.lastError);
-  } else {
-    console.log("item created successfully");
-  }
+    if (browser.runtime.lastError) {
+        console.log("error creating item:" + browser.runtime.lastError);
+    } else {
+        console.log("item created successfully");
+    }
+}
+
+function uploadSuccessNotification() {
+    browser.notifications.create("Imgur Uploader", {
+        "type": "basic",
+        "title": "Imgur Uploader",
+        "message": "Upload successfully!"
+    });
+}
+function uploadFailNotification() {
+    browser.notifications.create("Imgur Uploader", {
+        "type": "basic",
+        "title": "Imgur Uploader",
+        "message": "Upload Failed"
+    });
 }
 
 browser.menus.create({
-  id: "image-select",
-  type: "normal",
-  title: "Upload to Imgur",
-  contexts: ["all"],
-  checked: false
+    id: "image-select",
+    type: "normal",
+    title: "Upload to Imgur",
+    contexts: ["all"],
+    checked: false
 }, onCreated);
 
 browser.menus.onClicked.addListener(function (info, tab) {
-  if (info.mediaType == "image") {
-    console.log(info.srcUrl);
-    console.log(info);
-    uploader.uploadToImgur(info.srcUrl).then(storage.add);
-  }
+    if (info.mediaType == "image") {
+
+        console.log(info.srcUrl);
+        console.log(info);
+        if (info.srcUrl.startsWith("data")) {
+            uploader.uploadToImgur(info.srcUrl.split("base64,")[1]).then(storage.add).then(uploadSuccessNotification, uploadFailNotification);
+        } else {
+            uploader.uploadToImgur(info.srcUrl).then(storage.add).then(uploadSuccessNotification, uploadFailNotification);
+        }
+    }
 });
 
 /***/ })

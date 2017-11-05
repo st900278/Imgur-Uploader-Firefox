@@ -37,7 +37,13 @@ module.exports = class Uploader {
             };
             console.log(options);
             request.post(options, function (error, res, body) {
-                resolve(body.data);
+                console.log(body.data);
+                if(body.data.error){
+                    reject(body.data);
+                }
+                else{
+                    resolve(body.data);
+                }
             });
         });
     }

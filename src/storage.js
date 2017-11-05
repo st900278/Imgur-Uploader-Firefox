@@ -15,8 +15,9 @@ module.exports = class Storage {
         return new Promise((resolve, reject)=>{
             var checkStorage = browser.storage.local.get("imgur").then((obj) => {
                 var send = obj['imgur'];
-
+                console.log(image);
                 send.push(image);
+                console.log(send);
                 browser.storage.local.set({
                     'imgur': send
                 }).then(()=>{
