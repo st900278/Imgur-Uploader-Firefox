@@ -55,9 +55,12 @@ document.querySelector("#add-image").addEventListener('click', function () {
 
     var createData = {
         type: "detached_panel",
+        titlePreface: "Upload Image",
         url: "../templates/panel.html",
         width: 250,
-        height: 100
+        height: 150,
+        left:100,
+        allowScriptsToClose: true
     };
     var creating = browser.windows.create(createData);
     console.log("test");
