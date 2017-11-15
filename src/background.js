@@ -4,7 +4,9 @@ var Storage = require("./storage.js");
 var uploader = new Uploader();
 var storage = new Storage();
 
-browser.browserAction.setIcon({path: "../icons/favicon.png"});
+browser.browserAction.setIcon({
+    path: "../icons/favicon.png"
+});
 
 function onCreated() {
     if (browser.runtime.lastError) {
@@ -14,14 +16,15 @@ function onCreated() {
     }
 }
 
-function uploadSuccessNotification(){
+function uploadSuccessNotification() {
     browser.notifications.create("Imgur Uploader", {
         "type": "basic",
         "title": "Imgur Uploader",
         "message": "Upload successfully!"
     });
 }
-function uploadFailNotification(){
+
+function uploadFailNotification() {
     browser.notifications.create("Imgur Uploader", {
         "type": "basic",
         "title": "Imgur Uploader",
@@ -42,11 +45,27 @@ browser.menus.onClicked.addListener(function (info, tab) {
 
         console.log(info.srcUrl);
         console.log(info);
-        if(info.srcUrl.startsWith("data")){
+        if (info.srcUrl.startsWith("data")) {
             uploader.uploadToImgur(info.srcUrl.split("base64,")[1]).then(storage.add).then(uploadSuccessNotification, uploadFailNotification);
-        }
-        else{
+        } else {
             uploader.uploadToImgur(info.srcUrl).then(storage.add).then(uploadSuccessNotification, uploadFailNotification);
         }
     }
 });
+
+function handleMessage(request, sender, res) {
+    if(request.file){
+        console.log(request.file);
+        res({success: true});
+        uploader.uploader(request.file).then(storage.add).then(uploadSuccessNotification, uploadFailNotification);
+    }
+    /*
+    console.log("Message from the content script: " +
+        request.greeting);
+    sendResponse({
+        response: "Response from background script"
+    });
+    */
+}
+
+browser.runtime.onMessage.addListener(handleMessage);

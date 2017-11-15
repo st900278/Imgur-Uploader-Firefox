@@ -1,6 +1,6 @@
 body#panel {
     width: 400px;
-    min-height: 400px;
+    height: 400px;
 }
 
 .image-url {
@@ -36,10 +36,16 @@ span.link {
 
 .drag-area {
     border: 3px dashed grey;
-    height: 90px;
-    width: 240px;
-    margin: 25px 4px 25px 4px;
+    height: 110px;
+    width: 270px;
+    margin: 20px 15px 0px 15px;
     text-align: center;
+}
+
+div.error{
+    height: 20px;
+    color: #cc0000;
+
 }
 
 #drag-icon{

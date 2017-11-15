@@ -232,7 +232,7 @@ document.querySelector("#add-image").addEventListener('click', function () {
         type: "detached_panel",
         titlePreface: "Upload Image",
         url: "../templates/panel.html",
-        width: 250,
+        width: 300,
         height: 150,
         left: 100,
         allowScriptsToClose: true

@@ -15,7 +15,6 @@ function isImage(filename) {
     case 'jpg':
     case 'jpeg':
     case 'gif':
-    case 'bmp':
     case 'png':
         //etc
         return true;
@@ -36,9 +35,17 @@ function uploadEvent(e){
         removeEvent();
         document.querySelector("#drag-icon").setAttribute("src", "../build/image/loading.png");
         console.log(document.querySelector("#drag-icon").getAttribute("src"));
-        uploader.uploader(files[0]).then(storage.add).then(()=>{
-            window.close();
+        browser.runtime.sendMessage({
+            file: files[0]
+        }).then((msg)=>{
+            if(msg.success == true){
+                var winId = browser.windows.WINDOW_ID_CURRENT;
+                var removing = browser.windows.remove(winId);
+            }
         });
+    }
+    else{
+        document.querySelector(".error").innerHTML = "Invalid file format. Please try again";
     }
 
 }

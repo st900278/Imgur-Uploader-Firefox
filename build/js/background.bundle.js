@@ -745,7 +745,9 @@ var Storage = __webpack_require__(0);
 var uploader = new Uploader();
 var storage = new Storage();
 
-browser.browserAction.setIcon({ path: "../icons/favicon.png" });
+browser.browserAction.setIcon({
+    path: "../icons/favicon.png"
+});
 
 function onCreated() {
     if (browser.runtime.lastError) {
@@ -762,6 +764,7 @@ function uploadSuccessNotification() {
         "message": "Upload successfully!"
     });
 }
+
 function uploadFailNotification() {
     browser.notifications.create("Imgur Uploader", {
         "type": "basic",
@@ -790,6 +793,23 @@ browser.menus.onClicked.addListener(function (info, tab) {
         }
     }
 });
+
+function handleMessage(request, sender, res) {
+    if (request.file) {
+        console.log(request.file);
+        res({ success: true });
+        uploader.uploader(request.file).then(storage.add).then(uploadSuccessNotification, uploadFailNotification);
+    }
+    /*
+    console.log("Message from the content script: " +
+        request.greeting);
+    sendResponse({
+        response: "Response from background script"
+    });
+    */
+}
+
+browser.runtime.onMessage.addListener(handleMessage);
 
 /***/ })
 /******/ ]);
