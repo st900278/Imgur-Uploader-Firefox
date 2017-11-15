@@ -1,9 +1,9 @@
 var Storage = require("./storage.js");
 var storage = new Storage();
 
-browser.storage.local.get('imgur').then((value) =>{
+browser.storage.local.get('firefox-uploader-imgur').then((value) =>{
     console.log(value);
-    for(let x of value['imgur'].reverse()){
+    for(let x of value['firefox-uploader-imgur'].reverse()){
         if(x == undefined || x.link == undefined){
             continue;
         }

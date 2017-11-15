@@ -78,11 +78,11 @@ module.exports = function () {
     function Storage() {
         _classCallCheck(this, Storage);
 
-        browser.storage.local.get("imgur").then(function (obj) {
+        browser.storage.local.get("firefox-uploader-imgur").then(function (obj) {
             if (Object.getOwnPropertyNames(obj).length == 0) {
                 console.log("test");
                 browser.storage.local.set({
-                    'imgur': []
+                    'firefox-uploader-imgur': []
                 });
             }
         });
@@ -92,13 +92,13 @@ module.exports = function () {
         key: "add",
         value: function add(image) {
             return new Promise(function (resolve, reject) {
-                var checkStorage = browser.storage.local.get("imgur").then(function (obj) {
-                    var send = obj['imgur'];
+                var checkStorage = browser.storage.local.get("firefox-uploader-imgur").then(function (obj) {
+                    var send = obj['firefox-uploader-imgur'];
                     console.log(image);
                     send.push(image);
                     console.log(send);
                     browser.storage.local.set({
-                        'imgur': send
+                        'firefox-uploader-imgur': send
                     }).then(function () {
                         resolve("test");
                     });
@@ -108,14 +108,14 @@ module.exports = function () {
     }, {
         key: "remove",
         value: function remove(imageId) {
-            var checkStorage = browser.storage.local.get("imgur").then(function (obj) {
+            var checkStorage = browser.storage.local.get("firefox-uploader-imgur").then(function (obj) {
                 var send = [];
                 var _iteratorNormalCompletion = true;
                 var _didIteratorError = false;
                 var _iteratorError = undefined;
 
                 try {
-                    for (var _iterator = obj['imgur'][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    for (var _iterator = obj['firefox-uploader-imgur'][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                         var img = _step.value;
 
                         if (img.id != imageId) {
@@ -138,7 +138,7 @@ module.exports = function () {
                 }
 
                 browser.storage.local.set({
-                    'imgur': send
+                    'firefox-uploader-imgur': send
                 });
             });
         }
@@ -159,14 +159,14 @@ module.exports = function () {
 var Storage = __webpack_require__(0);
 var storage = new Storage();
 
-browser.storage.local.get('imgur').then(function (value) {
+browser.storage.local.get('firefox-uploader-imgur').then(function (value) {
     console.log(value);
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
 
     try {
-        for (var _iterator = value['imgur'].reverse()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = value['firefox-uploader-imgur'].reverse()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var x = _step.value;
 
             if (x == undefined || x.link == undefined) {
