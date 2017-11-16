@@ -1,6 +1,7 @@
 body#panel {
-    width: 400px;
+    width: 450px;
     height: 400px;
+    overflow-x: hidden;
 }
 
 .image-url {
@@ -38,7 +39,9 @@ span.link {
     border: 3px dashed grey;
     height: 110px;
     width: 270px;
-    margin: 20px 15px 0px 15px;
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    margin: auto;
     text-align: center;
 }
 
@@ -50,5 +53,14 @@ div.error{
 
 #drag-icon{
     height: 50px;
+}
 
+.copy-clipboard{
+    background: lightgrey;
+    color: white;
+    font-weight: bold;
+    font-size: 10px;
+    padding:2px;
+    cursor: pointer;
+    margin:0px auto;
 }

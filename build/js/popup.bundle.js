@@ -158,6 +158,7 @@ module.exports = function () {
 
 var Storage = __webpack_require__(0);
 var storage = new Storage();
+var copy = __webpack_require__(4);
 
 browser.storage.local.get('firefox-uploader-imgur').then(function (value) {
     console.log(value);
@@ -172,9 +173,9 @@ browser.storage.local.get('firefox-uploader-imgur').then(function (value) {
             if (x == undefined || x.link == undefined) {
                 continue;
             }
-            $(document.getElementById("image-list")).append('<div class="callout small image-url" data-closable >\
-            <p><img src="https://i.imgur.com/' + x.id + '.jpg" class="preview"> <span class="link">' + x.link + '</span</p>\
-            <button class="close-button" aria-label="Dismiss alert" type="button"  id="' + x.id + '" data-close>\
+            $(document.getElementById("image-list")).append('<div class="callout small image-url" data-closable data-url="' + x.link + '">\
+            <p><img src="https://i.imgur.com/' + x.id + '.jpg" class="preview"> <span class="link">' + x.link + '</span><button class="copy-clipboard" id="' + x.id + '-copy">Copy</button></p>\
+            <button class="close-button" aria-label="Dismiss alert" type="button"  id="' + x.id + '-close" data-close>\
             <span aria-hidden="true">&times;</span>\
             </button>\
         </div>');
@@ -201,7 +202,12 @@ function hasClass(elem, className) {
 document.addEventListener('click', function (e) {
     if (hasClass(e.target, 'close-button')) {
         console.log(e.target.id);
-        storage.remove(e.target.id);
+        storage.remove(e.target.id.split("-close")[0]);
+    }
+    if (hasClass(e.target, 'copy-clipboard')) {
+        console.log(e.target.id.split("-copy")[0]);
+        var link = "https://i.imgur.com/" + e.target.id.split("-copy")[0] + ".jpg";
+        copy.setCopy(link);
     }
 }, false);
 
@@ -232,14 +238,61 @@ document.querySelector("#add-image").addEventListener('click', function () {
         type: "detached_panel",
         titlePreface: "Upload Image",
         url: "../templates/panel.html",
-        width: 300,
-        height: 150,
+        width: 400,
+        height: 200,
         left: 100,
         allowScriptsToClose: true
     };
     var creating = browser.windows.create(createData);
     console.log("test");
 });
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports.setCopy = function (text) {
+    var id = "clipboard-textarea-hidden-id";
+    var existsTextarea = document.getElementById(id);
+
+    if (!existsTextarea) {
+        console.log("Creating textarea");
+        var textarea = document.createElement("textarea");
+        textarea.id = id;
+        textarea.style.position = 'fixed';
+        textarea.style.top = -100;
+        textarea.style.left = -100;
+        textarea.style.width = '1px';
+        textarea.style.height = '1px';
+        textarea.style.padding = 0;
+        textarea.style.border = 'none';
+        textarea.style.outline = 'none';
+        textarea.style.boxShadow = 'none';
+        textarea.style.background = 'transparent';
+        document.querySelector("#image-list").appendChild(textarea);
+
+        existsTextarea = document.getElementById(id);
+    } else {
+        console.log("The textarea already exists :3");
+    }
+    console.log(existsTextarea);
+    existsTextarea.value = text;
+    existsTextarea.select();
+
+    try {
+        var status = document.execCommand('copy');
+        if (!status) {
+            console.error("Cannot copy text");
+        } else {
+            console.log("The text is now on the clipboard");
+        }
+    } catch (err) {
+        console.log('Unable to copy.');
+    }
+};
 
 /***/ })
 /******/ ]);

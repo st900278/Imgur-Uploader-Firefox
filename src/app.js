@@ -1,5 +1,6 @@
 var Storage = require("./storage.js");
 var storage = new Storage();
+var copy = require("./copy.js");
 
 browser.storage.local.get('firefox-uploader-imgur').then((value) =>{
     console.log(value);
@@ -7,12 +8,13 @@ browser.storage.local.get('firefox-uploader-imgur').then((value) =>{
         if(x == undefined || x.link == undefined){
             continue;
         }
-        $(document.getElementById("image-list")).append('<div class="callout small image-url" data-closable >\
-            <p><img src="https://i.imgur.com/'+x.id+'.jpg" class="preview"> <span class="link">'+x.link+'</span</p>\
-            <button class="close-button" aria-label="Dismiss alert" type="button"  id="'+x.id+'" data-close>\
+        $(document.getElementById("image-list")).append('<div class="callout small image-url" data-closable data-url="'+x.link+'">\
+            <p><img src="https://i.imgur.com/'+x.id+'.jpg" class="preview"> <span class="link">'+x.link+'</span><button class="copy-clipboard" id="'+x.id+'-copy">Copy</button></p>\
+            <button class="close-button" aria-label="Dismiss alert" type="button"  id="'+x.id+'-close" data-close>\
             <span aria-hidden="true">&times;</span>\
             </button>\
         </div>');
+
     }
 });
 
@@ -23,7 +25,12 @@ function hasClass(elem, className) {
 document.addEventListener('click', function (e) {
     if (hasClass(e.target, 'close-button')) {
         console.log(e.target.id);
-        storage.remove(e.target.id);
+        storage.remove(e.target.id.split("-close")[0]);
+    }
+    if(hasClass(e.target, 'copy-clipboard')){
+        console.log(e.target.id.split("-copy")[0]);
+        var link = "https://i.imgur.com/"+e.target.id.split("-copy")[0]+".jpg";
+        copy.setCopy(link);
     }
 }, false);
 
@@ -57,8 +64,8 @@ document.querySelector("#add-image").addEventListener('click', function () {
         type: "detached_panel",
         titlePreface: "Upload Image",
         url: "../templates/panel.html",
-        width: 300,
-        height: 150,
+        width: 400,
+        height: 200,
         left:100,
         allowScriptsToClose: true
     };
