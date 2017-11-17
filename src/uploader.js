@@ -1,8 +1,7 @@
 var request = require("browser-request");
 module.exports = class Uploader {
-    constructor(id = "a6bebdd6a51f656", secret = "e214c0bd81a3d82e1bdb2af5d86ac9db04851505") {
+    constructor(id = "a6bebdd6a51f656") {
         this.clientID = id;
-        this.clientSecret = secret;
     }
 
     imageReader(image) {

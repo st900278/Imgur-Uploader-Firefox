@@ -21,6 +21,10 @@
           "./build/js/background.bundle.js"
       ]
   },
+  "options_ui": {
+    "page": "templates/settings/options.html",
+    "open_in_tab" : true
+  },
   "browser_action":{
       "default_popup": "templates/popup.html"
   }
