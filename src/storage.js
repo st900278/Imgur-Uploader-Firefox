@@ -7,7 +7,7 @@ module.exports = class Storage {
                     'firefox-uploader-imgur': []
                 });
             }
-        })
+        });
 
     }
 

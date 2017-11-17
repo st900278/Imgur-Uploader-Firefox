@@ -1,9 +1,29 @@
 var request = require("browser-request");
 module.exports = class Uploader {
-    constructor(id = "a6bebdd6a51f656") {
-        this.clientID = id;
-    }
+    constructor() {
+        browser.storage.local.get("firefox-uploader-client-id").then((result) => {
 
+            if (result['firefox-uploader-client-id'] != "") {
+                this.clientID = result['firefox-uploader-client-id'];
+            } else {
+                this.clientID = "f752792c52f4cdf";
+            }
+            console.log(this.clientID);
+        });
+    }
+    uuid() {
+
+        var d = Date.now();
+        if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+            d += performance.now(); //use high-precision timer if available
+        }
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+
+    }
     imageReader(image) {
         let reader = new FileReader();
         return new Promise((resolve, reject) => {
@@ -20,14 +40,15 @@ module.exports = class Uploader {
         })
     }
 
-    uploadToImgur(file){
+    uploadToImgur(file) {
         var that = this;
         return new Promise((resolve, reject) => {
             console.log(this);
+            console.log(that.uuid());
             var options = {
                 url: "https://api.imgur.com/3/image",
                 headers: {
-                    authorization: "Client-ID " + that.clientID
+                    authorization: "Client-ID " + that.uuid() //+ that.clientID
                 },
                 json: {
                     image: file
@@ -37,10 +58,9 @@ module.exports = class Uploader {
             console.log(options);
             request.post(options, function (error, res, body) {
                 console.log(body.data);
-                if(body.data.error){
+                if (body.data.error) {
                     reject(body.data);
-                }
-                else{
+                } else {
                     resolve(body.data);
                 }
             });

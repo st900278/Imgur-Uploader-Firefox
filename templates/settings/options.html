@@ -1,21 +1,53 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../../build/css/foundation.css" />
     <link rel="stylesheet" href="../../build/css/options.css" />
-  </head>
+</head>
 
-  <body>
+<body>
+    <div class="grid-container">
+        <div class="grid-x">
+            <div class="medium-3 cell">
+                <ul class="vertical tabs" data-tabs id="options-tabs">
+                    <li class="tabs-title is-active"><a href="#panel1" aria-selected="true">System</a></li>
+                    <li class="tabs-title"><a href="#panel2">About me</a></li>
 
-    <form>
-        <label>Border color<input type="text" id="color" ></label>
-        <button type="submit">Save</button>
-    </form>
+                </ul>
+            </div>
+            <div class="medium-9 cell panel">
+                <div class="tabs-content" data-tabs-content="options-tabs">
+                    <div class="tabs-panel is-active" id="panel1">
+                        <form>
+                            <div class="grid-container">
+                                <h3>Imgur</h3>
+                                <div class="grid-x grid-padding-x">
+                                    <div class="medium-6 cell">
+                                        <label>Client-ID
+                                            <input type="text" placeholder="Client-ID" id="client-id">
+                                        </label>
+                                    </div>
+                                </div>
+                                <button class="success button" id="save1">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tabs-panel" id="panel2">
+                        <p>Two</p>
+                        <img class="thumbnail" src="assets/img/generic/rectangle-7.jpg">
+                    </div>
 
-    <script src="../build/js/options.bundle.js"></script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../build/js/jquery.js"></script>
+    <script src="../../build/js/foundation.js"></script>
+    <script src="../../build/js/options.bundle.js"></script>
 
-  </body>
+</body>
 
 </html>

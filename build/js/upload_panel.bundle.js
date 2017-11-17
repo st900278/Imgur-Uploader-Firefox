@@ -161,19 +161,39 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var request = __webpack_require__(2);
 module.exports = function () {
     function Uploader() {
-        var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "a6bebdd6a51f656";
-        var secret = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "e214c0bd81a3d82e1bdb2af5d86ac9db04851505";
+        var _this = this;
 
         _classCallCheck(this, Uploader);
 
-        this.clientID = id;
-        this.clientSecret = secret;
+        browser.storage.local.get("firefox-uploader-client-id").then(function (result) {
+
+            if (result['firefox-uploader-client-id'] != "") {
+                _this.clientID = result['firefox-uploader-client-id'];
+            } else {
+                _this.clientID = "f752792c52f4cdf";
+            }
+            console.log(_this.clientID);
+        });
     }
 
     _createClass(Uploader, [{
+        key: "uuid",
+        value: function uuid() {
+
+            var d = Date.now();
+            if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+                d += performance.now(); //use high-precision timer if available
+            }
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = (d + Math.random() * 16) % 16 | 0;
+                d = Math.floor(d / 16);
+                return (c === 'x' ? r : r & 0x3 | 0x8).toString(16);
+            });
+        }
+    }, {
         key: "imageReader",
         value: function imageReader(image) {
-            var _this = this;
+            var _this2 = this;
 
             var reader = new FileReader();
             return new Promise(function (resolve, reject) {
@@ -182,7 +202,7 @@ module.exports = function () {
                 };
 
                 reader.onerror = function () {
-                    return reject(_this);
+                    return reject(_this2);
                 };
 
                 reader.readAsDataURL(image);
@@ -191,15 +211,16 @@ module.exports = function () {
     }, {
         key: "uploadToImgur",
         value: function uploadToImgur(file) {
-            var _this2 = this;
+            var _this3 = this;
 
             var that = this;
             return new Promise(function (resolve, reject) {
-                console.log(_this2);
+                console.log(_this3);
+                console.log(that.uuid());
                 var options = {
                     url: "https://api.imgur.com/3/image",
                     headers: {
-                        authorization: "Client-ID " + that.clientID
+                        authorization: "Client-ID " + that.uuid() //+ that.clientID
                     },
                     json: {
                         image: file
