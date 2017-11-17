@@ -1,4 +1,10 @@
+body{
+
+}
+
+ul.tabs a{
+    font-size:18px;
+}
 div.tabs-content{
     min-height: 100vh;
-
 }

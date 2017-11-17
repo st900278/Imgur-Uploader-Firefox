@@ -2,11 +2,24 @@ var request = require("browser-request");
 module.exports = class Uploader {
     constructor() {
         browser.storage.local.get("firefox-uploader-client-id").then((result) => {
-
-            if (result['firefox-uploader-client-id'] != "") {
+            var backupList = ['a6bebdd6a51f656', 'f752792c52f4cdf', '474d8a50e7e752d', '9089d7837e30269', '6c6fa522da181b8', 'bbf63f907ae5614', '480391db79e87b6', 'ea76f402e22007a'];
+            if (typeof result['firefox-uploader-client-id'] !== "undefined") {
                 this.clientID = result['firefox-uploader-client-id'];
+                console.log(result['firefox-uploader-client-id']);
             } else {
-                this.clientID = "f752792c52f4cdf";
+                this.clientID = backupList[Math.floor(Math.random() * backupList.length)];
+            }
+            console.log(this.clientID);
+        });
+    }
+    update(){
+        browser.storage.local.get("firefox-uploader-client-id").then((result) => {
+            var backupList = ['a6bebdd6a51f656', 'f752792c52f4cdf', '474d8a50e7e752d', '9089d7837e30269', '6c6fa522da181b8', 'bbf63f907ae5614', '480391db79e87b6', 'ea76f402e22007a'];
+            if (typeof result['firefox-uploader-client-id'] !== "undefined") {
+                this.clientID = result['firefox-uploader-client-id'];
+                console.log(result['firefox-uploader-client-id']);
+            } else {
+                this.clientID = backupList[Math.floor(Math.random() * backupList.length)];
             }
             console.log(this.clientID);
         });
@@ -48,7 +61,7 @@ module.exports = class Uploader {
             var options = {
                 url: "https://api.imgur.com/3/image",
                 headers: {
-                    authorization: "Client-ID " + that.uuid() //+ that.clientID
+                    authorization: "Client-ID " + that.clientID
                 },
                 json: {
                     image: file

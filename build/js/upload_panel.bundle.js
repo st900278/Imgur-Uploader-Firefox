@@ -166,17 +166,34 @@ module.exports = function () {
         _classCallCheck(this, Uploader);
 
         browser.storage.local.get("firefox-uploader-client-id").then(function (result) {
-
-            if (result['firefox-uploader-client-id'] != "") {
+            var backupList = ['a6bebdd6a51f656', 'f752792c52f4cdf', '474d8a50e7e752d', '9089d7837e30269', '6c6fa522da181b8', 'bbf63f907ae5614', '480391db79e87b6', 'ea76f402e22007a'];
+            if (typeof result['firefox-uploader-client-id'] !== "undefined") {
                 _this.clientID = result['firefox-uploader-client-id'];
+                console.log(result['firefox-uploader-client-id']);
             } else {
-                _this.clientID = "f752792c52f4cdf";
+                _this.clientID = backupList[Math.floor(Math.random() * backupList.length)];
             }
             console.log(_this.clientID);
         });
     }
 
     _createClass(Uploader, [{
+        key: "update",
+        value: function update() {
+            var _this2 = this;
+
+            browser.storage.local.get("firefox-uploader-client-id").then(function (result) {
+                var backupList = ['a6bebdd6a51f656', 'f752792c52f4cdf', '474d8a50e7e752d', '9089d7837e30269', '6c6fa522da181b8', 'bbf63f907ae5614', '480391db79e87b6', 'ea76f402e22007a'];
+                if (typeof result['firefox-uploader-client-id'] !== "undefined") {
+                    _this2.clientID = result['firefox-uploader-client-id'];
+                    console.log(result['firefox-uploader-client-id']);
+                } else {
+                    _this2.clientID = backupList[Math.floor(Math.random() * backupList.length)];
+                }
+                console.log(_this2.clientID);
+            });
+        }
+    }, {
         key: "uuid",
         value: function uuid() {
 
@@ -193,7 +210,7 @@ module.exports = function () {
     }, {
         key: "imageReader",
         value: function imageReader(image) {
-            var _this2 = this;
+            var _this3 = this;
 
             var reader = new FileReader();
             return new Promise(function (resolve, reject) {
@@ -202,7 +219,7 @@ module.exports = function () {
                 };
 
                 reader.onerror = function () {
-                    return reject(_this2);
+                    return reject(_this3);
                 };
 
                 reader.readAsDataURL(image);
@@ -211,16 +228,16 @@ module.exports = function () {
     }, {
         key: "uploadToImgur",
         value: function uploadToImgur(file) {
-            var _this3 = this;
+            var _this4 = this;
 
             var that = this;
             return new Promise(function (resolve, reject) {
-                console.log(_this3);
+                console.log(_this4);
                 console.log(that.uuid());
                 var options = {
                     url: "https://api.imgur.com/3/image",
                     headers: {
-                        authorization: "Client-ID " + that.uuid() //+ that.clientID
+                        authorization: "Client-ID " + that.clientID
                     },
                     json: {
                         image: file

@@ -15,6 +15,12 @@ function onCreated() {
     }
 }
 
+browser.storage.onChanged.addListener((changes, area) => {
+    if(typeof changes['firefox-uploader-client-id'] !== "undefined"){
+        uploader.update();
+    }
+});
+
 function uploadSuccessNotification() {
     browser.notifications.create("Imgur Uploader", {
         "type": "basic",
