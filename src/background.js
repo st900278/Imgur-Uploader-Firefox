@@ -55,7 +55,21 @@ browser.menus.onClicked.addListener(function (info, tab) {
         console.log(info);
         console.log(uploader);
         if (info.srcUrl.startsWith("data")) {
-            uploader.uploadToImgur(info.srcUrl.split("base64,")[1]).then(storage.add).then(uploadSuccessNotification, uploadFailNotification);
+            uploader.uploadToImgur(info.srcUrl.split("base64,")[1]).then((e) => {
+                browser.storage.local.get('firefox-uploader-auto-copy').then((value) =>{
+                    if(value['firefox-uploader-auto-copy'] == true){
+                        browser.tabs.query({
+                            currentWindow: true,
+                            active: true
+                        }).then(result => {
+                            console.log(result);
+                            browser.tabs.sendMessage(result[0].id, {link: e.link});
+                        })
+                    }
+                });
+
+                storage.add(e);
+            }).then(uploadSuccessNotification, uploadFailNotification);
         } else {
             uploader.uploadToImgur(info.srcUrl).then((e)=>{
                 browser.storage.local.get('firefox-uploader-auto-copy').then((value) =>{
@@ -84,7 +98,19 @@ function handleMessage(request, sender, res) {
         res({
             success: true
         });
-        uploader.uploader(request.file).then(storage.add).then(uploadSuccessNotification, uploadFailNotification);
+        uploader.uploader(request.file).then(e => {
+            console.log(e);
+            browser.storage.local.get('firefox-uploader-auto-copy').then((value) =>{
+                if(value['firefox-uploader-auto-copy'] == true){
+                    browser.tabs.query().then(result => {
+                        console.log(result);
+                        browser.tabs.sendMessage(result[0].id, {link: e.link});
+                    })
+                }
+            });
+
+            storage.add(e);
+        }).then(uploadSuccessNotification, uploadFailNotification);
     }
 
 }
