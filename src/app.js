@@ -18,6 +18,9 @@ browser.storage.local.get('firefox-uploader-imgur').then((value) =>{
     }
 });
 
+browser.storage.local.get('firefox-uploader-auto-copy').then((value) =>{
+    document.getElementById('clipboard-switch').checked = value['firefox-uploader-auto-copy'];
+});
 
 function hasClass(elem, className) {
     return elem.className.split(' ').indexOf(className) > -1;
@@ -33,6 +36,11 @@ document.addEventListener('click', function (e) {
         copy.setCopy(link);
     }
 }, false);
+
+document.getElementById('clipboard-switch').addEventListener('change', (e) => {
+    console.log(e.target.checked);
+    browser.storage.local.set({'firefox-uploader-auto-copy': e.target.checked});
+});
 
 document.addEventListener('mouseover', function (e) {
     if (hasClass(e.target, 'preview')) {

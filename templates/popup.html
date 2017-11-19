@@ -3,26 +3,45 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="../build/css/foundation.css"/>
-  <link rel="stylesheet" href="../build/css/module.css" />
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../build/css/foundation.css" />
+    <link rel="stylesheet" href="../build/css/module.css" />
 </head>
 
 <body id="panel">
-  <div class="grid-x">
-    <div class="cell">
-        <div class="button expanded" id="add-image">Add Image</div>
+    <div class="grid-x">
+        <div class="cell">
+            <div class="button expanded" id="add-image">Add Image</div>
+        </div>
     </div>
-    <div class="cell" id="image-list">
-    </div>
-    <div class="viewer">
-        <img class="big-preview"/>
-    </div>
-  </div>
-  <script src="../build/js/jquery.js"></script>
-  <script src="../build/js/foundation.js"></script>
+    <div class="grid-x image-list-panel">
+        <div class="cell" id="image-list">
+        </div>
+        <div class="viewer">
+            <img class="big-preview" />
+        </div>
 
-  <script src="../build/js/popup.bundle.js"></script>
+    </div>
+
+    <div class="grid-x setting-panel">
+        <div class="small-6 cell">
+            Auto-Copy to Clipboard:
+        </div>
+        <div class="small-6 cell">
+            <div class="switch tiny">
+                <input class="switch-input" id="clipboard-switch" type="checkbox" name="clipboard-switch">
+                <label class="switch-paddle" for="clipboard-switch">
+                    <span class="switch-active" aria-hidden="true">Yes</span>
+                    <span class="switch-inactive" aria-hidden="true">No</span>
+                </label>
+            </div>
+        </div>
+
+    </div>
+    <script src="../build/js/jquery.js"></script>
+    <script src="../build/js/foundation.js"></script>
+
+    <script src="../build/js/popup.bundle.js"></script>
 </body>
 
 </html>

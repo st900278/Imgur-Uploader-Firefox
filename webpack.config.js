@@ -5,7 +5,8 @@ module.exports = {
         popup: './src/app.js',
         upload_panel: './src/upload_panel.js',
         background: './src/background.js',
-        options: './src/options.js'
+        options: './src/options.js',
+        content: './src/content.js'
     },
     output: {
         path: __dirname + "/build/js",

@@ -148,7 +148,8 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 1 */
+/* 1 */,
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -158,7 +159,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var request = __webpack_require__(2);
+var request = __webpack_require__(3);
 module.exports = function () {
     function Uploader() {
         var _this = this;
@@ -266,7 +267,7 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// Browser Request
@@ -769,7 +770,6 @@ function b64_enc (data) {
 
 
 /***/ }),
-/* 3 */,
 /* 4 */,
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -777,7 +777,7 @@ function b64_enc (data) {
 "use strict";
 
 
-var Uploader = __webpack_require__(1);
+var Uploader = __webpack_require__(2);
 var Storage = __webpack_require__(0);
 
 var uploader = new Uploader();

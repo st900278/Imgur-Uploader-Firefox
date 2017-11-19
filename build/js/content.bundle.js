@@ -60,41 +60,74 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 7:
+/***/ 1:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-$(document).foundation();
+module.exports.setCopy = function (text) {
+    var id = "clipboard-textarea-hidden-id";
+    var existsTextarea = document.getElementById(id);
 
-// fill in default value
-browser.storage.local.get("firefox-uploader-client-id").then(function (result) {
-    if (typeof result['firefox-uploader-client-id'] !== "undefined") {
-        document.querySelector("#client-id").value = result['firefox-uploader-client-id'];
+    if (!existsTextarea) {
+        console.log("Creating textarea");
+        var textarea = document.createElement("textarea");
+        textarea.id = id;
+        textarea.style.position = 'fixed';
+        textarea.style.top = -100;
+        textarea.style.left = -100;
+        textarea.style.width = '1px';
+        textarea.style.height = '1px';
+        textarea.style.padding = 0;
+        textarea.style.border = 'none';
+        textarea.style.outline = 'none';
+        textarea.style.boxShadow = 'none';
+        textarea.style.background = 'transparent';
+        document.querySelector("body").appendChild(textarea);
+
+        existsTextarea = document.getElementById(id);
+    } else {
+        console.log("The textarea already exists :3");
     }
-});
+    console.log(existsTextarea);
+    existsTextarea.value = text;
+    existsTextarea.select();
 
-document.querySelector("#save1").addEventListener('click', function () {
-    var clientID = document.querySelector("#client-id").value;
-    browser.storage.local.set({ "firefox-uploader-client-id": clientID });
-});
+    try {
+        var status = document.execCommand('copy');
+        if (!status) {
+            console.error("Cannot copy text");
+        } else {
+            console.log("The text is now on the clipboard");
+        }
+    } catch (err) {
+        console.log('Unable to copy.');
+    }
+};
 
-browser.storage.local.get('firefox-uploader-auto-copy').then(function (value) {
-    document.getElementById('clipboard-switch').checked = value['firefox-uploader-auto-copy'];
-});
+/***/ }),
 
-document.getElementById('clipboard-switch').addEventListener('change', function (e) {
-    console.log(e.target.checked);
-    browser.storage.local.set({ 'firefox-uploader-auto-copy': e.target.checked });
+/***/ 8:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var copy = __webpack_require__(1);
+
+console.log("test");
+browser.runtime.onMessage.addListener(function (request) {
+    console.log(request);
+    copy.setCopy(request.link);
 });
 
 /***/ })
 
 /******/ });
-//# sourceMappingURL=options.bundle.js.map
+//# sourceMappingURL=content.bundle.js.map

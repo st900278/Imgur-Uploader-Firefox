@@ -154,11 +154,58 @@ module.exports = function () {
 "use strict";
 
 
+module.exports.setCopy = function (text) {
+    var id = "clipboard-textarea-hidden-id";
+    var existsTextarea = document.getElementById(id);
+
+    if (!existsTextarea) {
+        console.log("Creating textarea");
+        var textarea = document.createElement("textarea");
+        textarea.id = id;
+        textarea.style.position = 'fixed';
+        textarea.style.top = -100;
+        textarea.style.left = -100;
+        textarea.style.width = '1px';
+        textarea.style.height = '1px';
+        textarea.style.padding = 0;
+        textarea.style.border = 'none';
+        textarea.style.outline = 'none';
+        textarea.style.boxShadow = 'none';
+        textarea.style.background = 'transparent';
+        document.querySelector("body").appendChild(textarea);
+
+        existsTextarea = document.getElementById(id);
+    } else {
+        console.log("The textarea already exists :3");
+    }
+    console.log(existsTextarea);
+    existsTextarea.value = text;
+    existsTextarea.select();
+
+    try {
+        var status = document.execCommand('copy');
+        if (!status) {
+            console.error("Cannot copy text");
+        } else {
+            console.log("The text is now on the clipboard");
+        }
+    } catch (err) {
+        console.log('Unable to copy.');
+    }
+};
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var request = __webpack_require__(2);
+var request = __webpack_require__(3);
 module.exports = function () {
     function Uploader() {
         var _this = this;
@@ -266,7 +313,7 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// Browser Request
@@ -769,7 +816,6 @@ function b64_enc (data) {
 
 
 /***/ }),
-/* 3 */,
 /* 4 */,
 /* 5 */,
 /* 6 */
@@ -778,8 +824,9 @@ function b64_enc (data) {
 "use strict";
 
 
-var Uploader = __webpack_require__(1);
+var Uploader = __webpack_require__(2);
 var Storage = __webpack_require__(0);
+var copy = __webpack_require__(1);
 
 var uploader = new Uploader();
 var storage = new Storage();
@@ -810,6 +857,7 @@ function uploadSuccessNotification() {
 }
 
 function uploadFailNotification() {
+
     browser.notifications.create("Imgur Uploader", {
         "type": "basic",
         "title": "Imgur Uploader",
@@ -826,6 +874,7 @@ browser.menus.create({
 }, onCreated);
 
 browser.menus.onClicked.addListener(function (info, tab) {
+
     if (info.mediaType == "image") {
 
         console.log(info.srcUrl);
@@ -834,7 +883,21 @@ browser.menus.onClicked.addListener(function (info, tab) {
         if (info.srcUrl.startsWith("data")) {
             uploader.uploadToImgur(info.srcUrl.split("base64,")[1]).then(storage.add).then(uploadSuccessNotification, uploadFailNotification);
         } else {
-            uploader.uploadToImgur(info.srcUrl).then(storage.add).then(uploadSuccessNotification, uploadFailNotification);
+            uploader.uploadToImgur(info.srcUrl).then(function (e) {
+                browser.storage.local.get('firefox-uploader-auto-copy').then(function (value) {
+                    if (value['firefox-uploader-auto-copy'] == true) {
+                        browser.tabs.query({
+                            currentWindow: true,
+                            active: true
+                        }).then(function (result) {
+                            console.log(result);
+                            browser.tabs.sendMessage(result[0].id, { link: e.link });
+                        });
+                    }
+                });
+
+                storage.add(e);
+            }).then(uploadSuccessNotification, uploadFailNotification);
         }
     }
 });
@@ -842,16 +905,11 @@ browser.menus.onClicked.addListener(function (info, tab) {
 function handleMessage(request, sender, res) {
     if (request.file) {
         console.log(request.file);
-        res({ success: true });
+        res({
+            success: true
+        });
         uploader.uploader(request.file).then(storage.add).then(uploadSuccessNotification, uploadFailNotification);
     }
-    /*
-    console.log("Message from the content script: " +
-        request.greeting);
-    sendResponse({
-        response: "Response from background script"
-    });
-    */
 }
 
 browser.runtime.onMessage.addListener(handleMessage);

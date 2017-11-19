@@ -16,7 +16,7 @@ module.exports.setCopy = function(text){
         textarea.style.outline = 'none';
         textarea.style.boxShadow = 'none';
         textarea.style.background = 'transparent';
-        document.querySelector("#image-list").appendChild(textarea);
+        document.querySelector("body").appendChild(textarea);
 
         existsTextarea = document.getElementById(id);
     }else{

@@ -1,5 +1,6 @@
 var Uploader = require("./uploader.js");
 var Storage = require("./storage.js");
+var copy = require("./copy.js");
 
 var uploader = new Uploader();
 var storage = new Storage();
@@ -16,7 +17,7 @@ function onCreated() {
 }
 
 browser.storage.onChanged.addListener((changes, area) => {
-    if(typeof changes['firefox-uploader-client-id'] !== "undefined"){
+    if (typeof changes['firefox-uploader-client-id'] !== "undefined") {
         uploader.update();
     }
 });
@@ -30,6 +31,7 @@ function uploadSuccessNotification() {
 }
 
 function uploadFailNotification() {
+
     browser.notifications.create("Imgur Uploader", {
         "type": "basic",
         "title": "Imgur Uploader",
@@ -46,6 +48,7 @@ browser.menus.create({
 }, onCreated);
 
 browser.menus.onClicked.addListener(function (info, tab) {
+
     if (info.mediaType == "image") {
 
         console.log(info.srcUrl);
@@ -54,24 +57,36 @@ browser.menus.onClicked.addListener(function (info, tab) {
         if (info.srcUrl.startsWith("data")) {
             uploader.uploadToImgur(info.srcUrl.split("base64,")[1]).then(storage.add).then(uploadSuccessNotification, uploadFailNotification);
         } else {
-            uploader.uploadToImgur(info.srcUrl).then(storage.add).then(uploadSuccessNotification, uploadFailNotification);
+            uploader.uploadToImgur(info.srcUrl).then((e)=>{
+                browser.storage.local.get('firefox-uploader-auto-copy').then((value) =>{
+                    if(value['firefox-uploader-auto-copy'] == true){
+                        browser.tabs.query({
+                            currentWindow: true,
+                            active: true
+                        }).then(result => {
+                            console.log(result);
+                            browser.tabs.sendMessage(result[0].id, {link: e.link});
+                        })
+                    }
+                });
+
+                storage.add(e);
+            }).then(uploadSuccessNotification, uploadFailNotification);
         }
     }
+
+
 });
 
 function handleMessage(request, sender, res) {
-    if(request.file){
+    if (request.file) {
         console.log(request.file);
-        res({success: true});
+        res({
+            success: true
+        });
         uploader.uploader(request.file).then(storage.add).then(uploadSuccessNotification, uploadFailNotification);
     }
-    /*
-    console.log("Message from the content script: " +
-        request.greeting);
-    sendResponse({
-        response: "Response from background script"
-    });
-    */
+
 }
 
 browser.runtime.onMessage.addListener(handleMessage);

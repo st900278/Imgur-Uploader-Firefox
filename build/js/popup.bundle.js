@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -148,9 +148,56 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 1 */,
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports.setCopy = function (text) {
+    var id = "clipboard-textarea-hidden-id";
+    var existsTextarea = document.getElementById(id);
+
+    if (!existsTextarea) {
+        console.log("Creating textarea");
+        var textarea = document.createElement("textarea");
+        textarea.id = id;
+        textarea.style.position = 'fixed';
+        textarea.style.top = -100;
+        textarea.style.left = -100;
+        textarea.style.width = '1px';
+        textarea.style.height = '1px';
+        textarea.style.padding = 0;
+        textarea.style.border = 'none';
+        textarea.style.outline = 'none';
+        textarea.style.boxShadow = 'none';
+        textarea.style.background = 'transparent';
+        document.querySelector("body").appendChild(textarea);
+
+        existsTextarea = document.getElementById(id);
+    } else {
+        console.log("The textarea already exists :3");
+    }
+    console.log(existsTextarea);
+    existsTextarea.value = text;
+    existsTextarea.select();
+
+    try {
+        var status = document.execCommand('copy');
+        if (!status) {
+            console.error("Cannot copy text");
+        } else {
+            console.log("The text is now on the clipboard");
+        }
+    } catch (err) {
+        console.log('Unable to copy.');
+    }
+};
+
+/***/ }),
 /* 2 */,
-/* 3 */
+/* 3 */,
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -158,7 +205,7 @@ module.exports = function () {
 
 var Storage = __webpack_require__(0);
 var storage = new Storage();
-var copy = __webpack_require__(4);
+var copy = __webpack_require__(1);
 
 browser.storage.local.get('firefox-uploader-imgur').then(function (value) {
     console.log(value);
@@ -196,6 +243,10 @@ browser.storage.local.get('firefox-uploader-imgur').then(function (value) {
     }
 });
 
+browser.storage.local.get('firefox-uploader-auto-copy').then(function (value) {
+    document.getElementById('clipboard-switch').checked = value['firefox-uploader-auto-copy'];
+});
+
 function hasClass(elem, className) {
     return elem.className.split(' ').indexOf(className) > -1;
 }
@@ -210,6 +261,11 @@ document.addEventListener('click', function (e) {
         copy.setCopy(link);
     }
 }, false);
+
+document.getElementById('clipboard-switch').addEventListener('change', function (e) {
+    console.log(e.target.checked);
+    browser.storage.local.set({ 'firefox-uploader-auto-copy': e.target.checked });
+});
 
 document.addEventListener('mouseover', function (e) {
     if (hasClass(e.target, 'preview')) {
@@ -246,53 +302,6 @@ document.querySelector("#add-image").addEventListener('click', function () {
     var creating = browser.windows.create(createData);
     console.log("test");
 });
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports.setCopy = function (text) {
-    var id = "clipboard-textarea-hidden-id";
-    var existsTextarea = document.getElementById(id);
-
-    if (!existsTextarea) {
-        console.log("Creating textarea");
-        var textarea = document.createElement("textarea");
-        textarea.id = id;
-        textarea.style.position = 'fixed';
-        textarea.style.top = -100;
-        textarea.style.left = -100;
-        textarea.style.width = '1px';
-        textarea.style.height = '1px';
-        textarea.style.padding = 0;
-        textarea.style.border = 'none';
-        textarea.style.outline = 'none';
-        textarea.style.boxShadow = 'none';
-        textarea.style.background = 'transparent';
-        document.querySelector("#image-list").appendChild(textarea);
-
-        existsTextarea = document.getElementById(id);
-    } else {
-        console.log("The textarea already exists :3");
-    }
-    console.log(existsTextarea);
-    existsTextarea.value = text;
-    existsTextarea.select();
-
-    try {
-        var status = document.execCommand('copy');
-        if (!status) {
-            console.error("Cannot copy text");
-        } else {
-            console.log("The text is now on the clipboard");
-        }
-    } catch (err) {
-        console.log('Unable to copy.');
-    }
-};
 
 /***/ })
 /******/ ]);
