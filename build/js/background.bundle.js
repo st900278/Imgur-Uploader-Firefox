@@ -330,7 +330,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// UMD HEADER START
+// UMD HEADER START 
 (function (root, factory) {
     if (true) {
         // AMD. Register as an anonymous module.
@@ -416,7 +416,7 @@ function request(options, callback) {
     else if(typeof options.body !== 'string')
       options.body = JSON.stringify(options.body)
   }
-
+  
   //BEGIN QS Hack
   var serialize = function(obj) {
     var str = [];
@@ -426,7 +426,7 @@ function request(options, callback) {
       }
     return str.join("&");
   }
-
+  
   if(options.qs){
     var qs = (typeof options.qs == 'string')? options.qs : serialize(options.qs);
     if(options.uri.indexOf('?') !== -1){ //no get params
@@ -436,7 +436,7 @@ function request(options, callback) {
     }
   }
   //END QS Hack
-
+  
   //BEGIN FORM Hack
   var multipart = function(obj) {
     //todo: support file type (useful?)
@@ -459,7 +459,7 @@ function request(options, callback) {
     result.type = 'multipart/form-data; boundary='+result.boundry;
     return result;
   }
-
+  
   if(options.form){
     if(typeof options.form == 'string') throw('form name unsupported');
     if(options.method === 'POST'){
@@ -918,7 +918,6 @@ browser.menus.onClicked.addListener(function (info, tab) {
 
 function handleMessage(request, sender, res) {
     if (request.file) {
-        console.log(request.file);
         res({
             success: true
         });
@@ -936,6 +935,25 @@ function handleMessage(request, sender, res) {
             });
 
             storage.add(e);
+        }).then(uploadSuccessNotification, uploadFailNotification);
+    } else if (request.url) {
+        res({
+            success: true
+        });
+        uploader.uploadToImgur(request.url.split("base64,")[1]).then(function (e) {
+            console.log(e);
+            storage.add(e);
+            browser.storage.local.get('firefox-uploader-auto-copy').then(function (value) {
+                console.log("storing");
+                if (value['firefox-uploader-auto-copy'] == true) {
+                    browser.tabs.query({
+                        active: true
+                    }).then(function (result) {
+                        console.log(result);
+                        browser.tabs.sendMessage(result[0].id, { link: e.link });
+                    });
+                }
+            });
         }).then(uploadSuccessNotification, uploadFailNotification);
     }
 }

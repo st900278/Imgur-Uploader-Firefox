@@ -94,7 +94,6 @@ browser.menus.onClicked.addListener(function (info, tab) {
 
 function handleMessage(request, sender, res) {
     if (request.file) {
-        console.log(request.file);
         res({
             success: true
         });
@@ -102,7 +101,9 @@ function handleMessage(request, sender, res) {
             console.log(e);
             browser.storage.local.get('firefox-uploader-auto-copy').then((value) =>{
                 if(value['firefox-uploader-auto-copy'] == true){
-                    browser.tabs.query().then(result => {
+                    browser.tabs.query({
+                        active: true
+                    }).then(result => {
                         console.log(result);
                         browser.tabs.sendMessage(result[0].id, {link: e.link});
                     })
@@ -112,7 +113,26 @@ function handleMessage(request, sender, res) {
             storage.add(e);
         }).then(uploadSuccessNotification, uploadFailNotification);
     }
-
+    else if(request.url){
+        res({
+            success: true
+        });
+        uploader.uploadToImgur(request.url.split("base64,")[1]).then(e => {
+            console.log(e);
+            storage.add(e);
+            browser.storage.local.get('firefox-uploader-auto-copy').then((value) =>{
+                console.log("storing");
+                if(value['firefox-uploader-auto-copy'] == true){
+                    browser.tabs.query({
+                        active: true
+                    }).then(result => {
+                        console.log(result);
+                        browser.tabs.sendMessage(result[0].id, {link: e.link});
+                    })
+                }
+            });
+        }).then(uploadSuccessNotification, uploadFailNotification);
+    }
 }
 
 browser.runtime.onMessage.addListener(handleMessage);
