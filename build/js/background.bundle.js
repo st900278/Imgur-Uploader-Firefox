@@ -142,6 +142,13 @@ module.exports = function () {
                 });
             });
         }
+    }, {
+        key: "removeAll",
+        value: function removeAll() {
+            browser.storage.local.set({
+                'firefox-uploader-imgur': []
+            });
+        }
     }]);
 
     return Storage;
@@ -852,7 +859,8 @@ function uploadSuccessNotification() {
     browser.notifications.create("Imgur Uploader", {
         "type": "basic",
         "title": "Imgur Uploader",
-        "message": "Upload successfully!"
+        "message": "Upload successfully!",
+        "iconUrl": "../../icons/favicon.png"
     });
 }
 
@@ -861,7 +869,17 @@ function uploadFailNotification() {
     browser.notifications.create("Imgur Uploader", {
         "type": "basic",
         "title": "Imgur Uploader",
-        "message": "Upload Failed"
+        "message": "Upload Failed",
+        "iconUrl": "../../icons/favicon.png"
+    });
+}
+
+function uploadLocalNotification() {
+    browser.notifications.create("Imgur Uploader", {
+        "type": "basic",
+        "title": "Imgur Uploader",
+        "message": "Please use 'Add image' to upload local file",
+        "iconUrl": "../../icons/favicon.png"
     });
 }
 
@@ -876,7 +894,6 @@ browser.menus.create({
 browser.menus.onClicked.addListener(function (info, tab) {
 
     if (info.mediaType == "image") {
-
         console.log(info.srcUrl);
         console.log(info);
         console.log(uploader);
@@ -889,13 +906,17 @@ browser.menus.onClicked.addListener(function (info, tab) {
                             active: true
                         }).then(function (result) {
                             console.log(result);
-                            browser.tabs.sendMessage(result[0].id, { link: e.link });
+                            browser.tabs.sendMessage(result[0].id, {
+                                link: e.link
+                            });
                         });
                     }
                 });
 
                 storage.add(e);
             }).then(uploadSuccessNotification, uploadFailNotification);
+        } else if (info.srcUrl.startsWith("file")) {
+            uploadLocalNotification();
         } else {
             uploader.uploadToImgur(info.srcUrl).then(function (e) {
                 browser.storage.local.get('firefox-uploader-auto-copy').then(function (value) {
@@ -905,7 +926,9 @@ browser.menus.onClicked.addListener(function (info, tab) {
                             active: true
                         }).then(function (result) {
                             console.log(result);
-                            browser.tabs.sendMessage(result[0].id, { link: e.link });
+                            browser.tabs.sendMessage(result[0].id, {
+                                link: e.link
+                            });
                         });
                     }
                 });
@@ -929,7 +952,9 @@ function handleMessage(request, sender, res) {
                         active: true
                     }).then(function (result) {
                         console.log(result);
-                        browser.tabs.sendMessage(result[0].id, { link: e.link });
+                        browser.tabs.sendMessage(result[0].id, {
+                            link: e.link
+                        });
                     });
                 }
             });
@@ -950,7 +975,9 @@ function handleMessage(request, sender, res) {
                         active: true
                     }).then(function (result) {
                         console.log(result);
-                        browser.tabs.sendMessage(result[0].id, { link: e.link });
+                        browser.tabs.sendMessage(result[0].id, {
+                            link: e.link
+                        });
                     });
                 }
             });

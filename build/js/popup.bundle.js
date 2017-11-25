@@ -142,6 +142,13 @@ module.exports = function () {
                 });
             });
         }
+    }, {
+        key: "removeAll",
+        value: function removeAll() {
+            browser.storage.local.set({
+                'firefox-uploader-imgur': []
+            });
+        }
     }]);
 
     return Storage;
@@ -259,6 +266,13 @@ document.addEventListener('click', function (e) {
         console.log(e.target.id.split("-copy")[0]);
         var link = "https://i.imgur.com/" + e.target.id.split("-copy")[0] + ".jpg";
         copy.setCopy(link);
+    }
+    if (hasClass(e.target, 'clear-all')) {
+        storage.removeAll();
+        var link = document.querySelectorAll(".image-url");
+        for (var i = 0; i < link.length; i++) {
+            link[i].parentNode.removeChild(link[i]);
+        }
     }
 }, false);
 

@@ -43,4 +43,9 @@ module.exports = class Storage {
         });
     }
 
+    removeAll(){
+        browser.storage.local.set({
+            'firefox-uploader-imgur': []
+        })
+    }
 }

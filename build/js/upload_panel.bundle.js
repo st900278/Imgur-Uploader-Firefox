@@ -142,6 +142,13 @@ module.exports = function () {
                 });
             });
         }
+    }, {
+        key: "removeAll",
+        value: function removeAll() {
+            browser.storage.local.set({
+                'firefox-uploader-imgur': []
+            });
+        }
     }]);
 
     return Storage;
@@ -802,8 +809,8 @@ function isImage(filename) {
 }
 
 function removeEvent() {
-    document.querySelector("#add-image").removeEventListener('drop', uploadEvent, false);
-    document.querySelector("#add-file").removeEventListener('change', uploadEvent, false);
+    document.querySelector("#add-image").removeEventListener('drop', uploadFile, false);
+    document.querySelector("#add-file").removeEventListener('change', uploadFile, false);
 }
 
 function uploadFile(e) {
@@ -867,7 +874,6 @@ document.querySelector("#add-file").addEventListener('change', uploadFile, false
 window.addEventListener("paste", function (e) {
     var items = e.clipboardData.items;
     for (var i = 0; i < items.length; i++) {
-        console.log(items[i]);
         if (items[i].type.indexOf("image") == -1) continue;
         console.log("test");
         var blob = items[i].getAsFile();
