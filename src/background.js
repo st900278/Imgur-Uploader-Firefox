@@ -26,7 +26,7 @@ function uploadSuccessNotification() {
     browser.notifications.create("Imgur Uploader", {
         "type": "basic",
         "title": "Imgur Uploader",
-        "message": "Upload successfully!",
+        "message": "Upload successful!",
         "iconUrl": "../../icons/favicon.png"
     });
 }
