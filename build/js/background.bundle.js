@@ -252,124 +252,7 @@ module.exports.setCopy = function (text) {
 };
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var request = __webpack_require__(3);
-module.exports = function () {
-    function Uploader() {
-        var _this = this;
-
-        _classCallCheck(this, Uploader);
-
-        browser.storage.local.get("firefox-uploader-client-id").then(function (result) {
-            var backupList = ['a6bebdd6a51f656', 'f752792c52f4cdf', '474d8a50e7e752d', '9089d7837e30269', '6c6fa522da181b8', 'bbf63f907ae5614', '480391db79e87b6', 'ea76f402e22007a'];
-            if (typeof result['firefox-uploader-client-id'] !== "undefined") {
-                _this.clientID = result['firefox-uploader-client-id'];
-                console.log(result['firefox-uploader-client-id']);
-            } else {
-                _this.clientID = backupList[Math.floor(Math.random() * backupList.length)];
-            }
-            console.log(_this.clientID);
-        });
-    }
-
-    _createClass(Uploader, [{
-        key: "update",
-        value: function update() {
-            var _this2 = this;
-
-            browser.storage.local.get("firefox-uploader-client-id").then(function (result) {
-                var backupList = ['a6bebdd6a51f656', 'f752792c52f4cdf', '474d8a50e7e752d', '9089d7837e30269', '6c6fa522da181b8', 'bbf63f907ae5614', '480391db79e87b6', 'ea76f402e22007a'];
-                if (typeof result['firefox-uploader-client-id'] !== "undefined") {
-                    _this2.clientID = result['firefox-uploader-client-id'];
-                    console.log(result['firefox-uploader-client-id']);
-                } else {
-                    _this2.clientID = backupList[Math.floor(Math.random() * backupList.length)];
-                }
-                console.log(_this2.clientID);
-            });
-        }
-    }, {
-        key: "uuid",
-        value: function uuid() {
-
-            var d = Date.now();
-            if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
-                d += performance.now(); //use high-precision timer if available
-            }
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-                var r = (d + Math.random() * 16) % 16 | 0;
-                d = Math.floor(d / 16);
-                return (c === 'x' ? r : r & 0x3 | 0x8).toString(16);
-            });
-        }
-    }, {
-        key: "imageReader",
-        value: function imageReader(image) {
-            var _this3 = this;
-
-            var reader = new FileReader();
-            return new Promise(function (resolve, reject) {
-                reader.onload = function (event) {
-                    resolve(event.target.result.split("base64,")[1]);
-                };
-
-                reader.onerror = function () {
-                    return reject(_this3);
-                };
-
-                reader.readAsDataURL(image);
-            });
-        }
-    }, {
-        key: "uploadToImgur",
-        value: function uploadToImgur(file) {
-            var _this4 = this;
-
-            var that = this;
-            return new Promise(function (resolve, reject) {
-                console.log(_this4);
-                console.log(that.uuid());
-                var options = {
-                    url: "https://api.imgur.com/3/image",
-                    headers: {
-                        authorization: "Client-ID " + that.clientID
-                    },
-                    json: {
-                        image: file
-                    }
-
-                };
-                console.log(options);
-                request.post(options, function (error, res, body) {
-                    console.log(body.data);
-                    if (body.data.error) {
-                        reject(body.data);
-                    } else {
-                        resolve(body.data);
-                    }
-                });
-            });
-        }
-    }, {
-        key: "uploader",
-        value: function uploader(image) {
-            return this.imageReader(image).then(this.uploadToImgur.bind(this));
-        }
-    }]);
-
-    return Uploader;
-}();
-
-/***/ }),
+/* 2 */,
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -881,7 +764,7 @@ function b64_enc (data) {
 "use strict";
 
 
-var Uploader = __webpack_require__(2);
+var Uploader = __webpack_require__(9);
 var Storage = __webpack_require__(0);
 var copy = __webpack_require__(1);
 
@@ -1036,6 +919,126 @@ function handleMessage(request, sender, res) {
 }
 
 browser.runtime.onMessage.addListener(handleMessage);
+
+/***/ }),
+/* 7 */,
+/* 8 */,
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var request = __webpack_require__(3);
+module.exports = function () {
+    function Uploader() {
+        var _this = this;
+
+        _classCallCheck(this, Uploader);
+
+        browser.storage.local.get("firefox-uploader-client-id").then(function (result) {
+            var backupList = ['a6bebdd6a51f656', 'f752792c52f4cdf', '474d8a50e7e752d', '9089d7837e30269', '6c6fa522da181b8', 'bbf63f907ae5614', '480391db79e87b6', 'ea76f402e22007a'];
+            if (typeof result['firefox-uploader-client-id'] !== "undefined") {
+                _this.clientID = result['firefox-uploader-client-id'];
+                console.log(result['firefox-uploader-client-id']);
+            } else {
+                _this.clientID = backupList[Math.floor(Math.random() * backupList.length)];
+            }
+            console.log(_this.clientID);
+        });
+    }
+
+    _createClass(Uploader, [{
+        key: "update",
+        value: function update() {
+            var _this2 = this;
+
+            browser.storage.local.get("firefox-uploader-client-id").then(function (result) {
+                var backupList = ['a6bebdd6a51f656', 'f752792c52f4cdf', '474d8a50e7e752d', '9089d7837e30269', '6c6fa522da181b8', 'bbf63f907ae5614', '480391db79e87b6', 'ea76f402e22007a'];
+                if (typeof result['firefox-uploader-client-id'] !== "undefined") {
+                    _this2.clientID = result['firefox-uploader-client-id'];
+                    console.log(result['firefox-uploader-client-id']);
+                } else {
+                    _this2.clientID = backupList[Math.floor(Math.random() * backupList.length)];
+                }
+                console.log(_this2.clientID);
+            });
+        }
+    }, {
+        key: "uuid",
+        value: function uuid() {
+
+            var d = Date.now();
+            if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+                d += performance.now(); //use high-precision timer if available
+            }
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = (d + Math.random() * 16) % 16 | 0;
+                d = Math.floor(d / 16);
+                return (c === 'x' ? r : r & 0x3 | 0x8).toString(16);
+            });
+        }
+    }, {
+        key: "imageReader",
+        value: function imageReader(image) {
+            var _this3 = this;
+
+            var reader = new FileReader();
+            return new Promise(function (resolve, reject) {
+                reader.onload = function (event) {
+                    resolve(event.target.result.split("base64,")[1]);
+                };
+
+                reader.onerror = function () {
+                    return reject(_this3);
+                };
+
+                reader.readAsDataURL(image);
+            });
+        }
+    }, {
+        key: "uploadToImgur",
+        value: function uploadToImgur(file) {
+            var _this4 = this;
+
+            var that = this;
+            return new Promise(function (resolve, reject) {
+                console.log(_this4);
+                console.log(that.uuid());
+                var options = {
+                    url: "https://api.imgur.com/3/image",
+                    headers: {
+                        authorization: "Client-ID " + that.clientID
+                    },
+                    json: {
+                        image: file
+                    }
+
+                };
+                console.log(options);
+                request.post(options, function (error, res, body) {
+                    console.log(body.data);
+                    if (body.data.error) {
+                        reject(body.data);
+                    } else {
+                        resolve(body.data);
+                    }
+                });
+            });
+        }
+    }, {
+        key: "uploader",
+        value: function uploader(image) {
+            return this.imageReader(image).then(this.uploadToImgur.bind(this));
+        }
+    }]);
+
+    return Uploader;
+}();
 
 /***/ })
 /******/ ]);

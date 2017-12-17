@@ -8,3 +8,7 @@ ul.tabs a{
 div.tabs-content{
     min-height: 100vh;
 }
+
+img{
+    max-height: 150px;
+}

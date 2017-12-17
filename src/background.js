@@ -1,4 +1,4 @@
-var Uploader = require("./uploader.js");
+var Uploader = require("./imgur.js");
 var Storage = require("./storage.js");
 var copy = require("./copy.js");
 
