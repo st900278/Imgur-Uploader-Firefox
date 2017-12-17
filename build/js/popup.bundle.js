@@ -94,6 +94,9 @@ module.exports = function () {
             return new Promise(function (resolve, reject) {
                 var checkStorage = browser.storage.local.get("firefox-uploader-imgur").then(function (obj) {
                     var send = obj['firefox-uploader-imgur'];
+
+                    image['viewable'] = true;
+                    console.log("testesestestestestestestestestestestestestestestestesttset");
                     console.log(image);
                     send.push(image);
                     console.log(send);
@@ -133,6 +136,53 @@ module.exports = function () {
                     } finally {
                         if (_didIteratorError) {
                             throw _iteratorError;
+                        }
+                    }
+                }
+
+                browser.storage.local.set({
+                    'firefox-uploader-imgur': send
+                });
+            });
+        }
+    }, {
+        key: "change",
+        value: function change(imageId, status) {
+            var checkStorage = browser.storage.local.get("firefox-uploader-imgur").then(function (obj) {
+                var send = [];
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
+
+                try {
+                    for (var _iterator2 = obj['firefox-uploader-imgur'][Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        var img = _step2.value;
+
+                        if (img.id == imageId) {
+                            console.log(imageId);
+                            console.log(status);
+                            for (var property in status) {
+                                if (status.hasOwnProperty(property)) {
+                                    img[property] = status[property];
+                                }
+                            }
+                            console.log(img);
+                            send.push(img);
+                        } else {
+                            send.push(img);
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError2 = true;
+                    _iteratorError2 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                            _iterator2.return();
+                        }
+                    } finally {
+                        if (_didIteratorError2) {
+                            throw _iteratorError2;
                         }
                     }
                 }
@@ -224,7 +274,8 @@ browser.storage.local.get('firefox-uploader-imgur').then(function (value) {
         for (var _iterator = value['firefox-uploader-imgur'].reverse()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var x = _step.value;
 
-            if (x == undefined || x.link == undefined) {
+            console.log(x);
+            if (x == undefined || x.link == undefined || x.viewable == false) {
                 continue;
             }
             $(document.getElementById("image-list")).append('<div class="callout small image-url" data-closable data-url="' + x.link + '">\
@@ -260,7 +311,8 @@ function hasClass(elem, className) {
 document.addEventListener('click', function (e) {
     if (hasClass(e.target, 'close-button')) {
         console.log(e.target.id);
-        storage.remove(e.target.id.split("-close")[0]);
+        storage.change(e.target.id.split("-close")[0], { "viewable": false });
+        //storage.remove(e.target.id.split("-close")[0]);
     }
     if (hasClass(e.target, 'copy-clipboard')) {
         console.log(e.target.id.split("-copy")[0]);
@@ -315,6 +367,12 @@ document.querySelector("#add-image").addEventListener('click', function () {
     };
     var creating = browser.windows.create(createData);
     console.log("test");
+});
+
+document.querySelector("#options").addEventListener('click', function () {
+    browser.tabs.create({
+        url: "settings/options.html"
+    });
 });
 
 /***/ })

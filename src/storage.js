@@ -12,28 +12,30 @@ module.exports = class Storage {
     }
 
     add(image) {
-        return new Promise((resolve, reject)=>{
+        return new Promise((resolve, reject) => {
             var checkStorage = browser.storage.local.get("firefox-uploader-imgur").then((obj) => {
                 var send = obj['firefox-uploader-imgur'];
+
+                image['viewable'] = true;
+                console.log("testesestestestestestestestestestestestestestestestesttset");
                 console.log(image);
                 send.push(image);
                 console.log(send);
                 browser.storage.local.set({
                     'firefox-uploader-imgur': send
-                }).then(()=>{
+                }).then(() => {
                     resolve("test");
                 });
             });
         });
-
 
     }
 
     remove(imageId) {
         var checkStorage = browser.storage.local.get("firefox-uploader-imgur").then((obj) => {
             var send = [];
-            for(let img of obj['firefox-uploader-imgur']){
-                if(img.id != imageId){
+            for (let img of obj['firefox-uploader-imgur']) {
+                if (img.id != imageId) {
                     send.push(img);
                 }
             }
@@ -42,8 +44,31 @@ module.exports = class Storage {
             });
         });
     }
+    change(imageId, status) {
+        var checkStorage = browser.storage.local.get("firefox-uploader-imgur").then((obj) => {
+            var send = [];
+            for (let img of obj['firefox-uploader-imgur']) {
+                if (img.id == imageId) {
+                    console.log(imageId);
+                    console.log(status);
+                    for (var property in status) {
+                        if (status.hasOwnProperty(property)) {
+                            img[property] = status[property];
+                        }
+                    }
+                    console.log(img);
+                    send.push(img);
+                } else {
+                    send.push(img);
+                }
+            }
+            browser.storage.local.set({
+                'firefox-uploader-imgur': send
+            });
+        });
 
-    removeAll(){
+    }
+    removeAll() {
         browser.storage.local.set({
             'firefox-uploader-imgur': []
         })

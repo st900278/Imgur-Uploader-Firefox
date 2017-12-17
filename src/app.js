@@ -5,7 +5,8 @@ var copy = require("./copy.js");
 browser.storage.local.get('firefox-uploader-imgur').then((value) =>{
     console.log(value);
     for(let x of value['firefox-uploader-imgur'].reverse()){
-        if(x == undefined || x.link == undefined){
+        console.log(x);
+        if(x == undefined || x.link == undefined || x.viewable == false){
             continue;
         }
         $(document.getElementById("image-list")).append('<div class="callout small image-url" data-closable data-url="'+x.link+'">\
@@ -28,7 +29,8 @@ function hasClass(elem, className) {
 document.addEventListener('click', function (e) {
     if (hasClass(e.target, 'close-button')) {
         console.log(e.target.id);
-        storage.remove(e.target.id.split("-close")[0]);
+        storage.change(e.target.id.split("-close")[0], {"viewable": false});
+        //storage.remove(e.target.id.split("-close")[0]);
     }
     if(hasClass(e.target, 'copy-clipboard')){
         console.log(e.target.id.split("-copy")[0]);
@@ -87,3 +89,10 @@ document.querySelector("#add-image").addEventListener('click', function () {
     var creating = browser.windows.create(createData);
     console.log("test");
 });
+
+document.querySelector("#options").addEventListener('click', function(){
+  browser.tabs.create({
+    url:"settings/options.html"
+  })
+
+})

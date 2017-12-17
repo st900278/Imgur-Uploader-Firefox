@@ -94,6 +94,43 @@ document.getElementById('clipboard-switch').addEventListener('change', function 
     browser.storage.local.set({ 'firefox-uploader-auto-copy': e.target.checked });
 });
 
+browser.storage.local.get('firefox-uploader-imgur').then(function (value) {
+    console.log(value);
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+        for (var _iterator = value['firefox-uploader-imgur'].reverse()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var x = _step.value;
+
+            console.log(x);
+            if (x == undefined || x.link == undefined || x.viewable == false) {
+                continue;
+            }
+            $(document.getElementById("image-list")).append('<div class="callout small image-url" data-closable data-url="' + x.link + '">\
+            <p><img src="https://i.imgur.com/' + x.id + '.jpg" class="preview"> <span class="link">' + x.link + '</span><button class="copy-clipboard" id="' + x.id + '-copy">Copy</button></p>\
+            <button class="close-button" aria-label="Dismiss alert" type="button"  id="' + x.id + '-close" data-close>\
+            <span aria-hidden="true">&times;</span>\
+            </button>\
+        </div>');
+        }
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+            }
+        } finally {
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
+    }
+});
+
 /***/ })
 
 /******/ });

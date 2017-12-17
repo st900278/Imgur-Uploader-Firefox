@@ -94,6 +94,9 @@ module.exports = function () {
             return new Promise(function (resolve, reject) {
                 var checkStorage = browser.storage.local.get("firefox-uploader-imgur").then(function (obj) {
                     var send = obj['firefox-uploader-imgur'];
+
+                    image['viewable'] = true;
+                    console.log("testesestestestestestestestestestestestestestestestesttset");
                     console.log(image);
                     send.push(image);
                     console.log(send);
@@ -133,6 +136,53 @@ module.exports = function () {
                     } finally {
                         if (_didIteratorError) {
                             throw _iteratorError;
+                        }
+                    }
+                }
+
+                browser.storage.local.set({
+                    'firefox-uploader-imgur': send
+                });
+            });
+        }
+    }, {
+        key: "change",
+        value: function change(imageId, status) {
+            var checkStorage = browser.storage.local.get("firefox-uploader-imgur").then(function (obj) {
+                var send = [];
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
+
+                try {
+                    for (var _iterator2 = obj['firefox-uploader-imgur'][Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        var img = _step2.value;
+
+                        if (img.id == imageId) {
+                            console.log(imageId);
+                            console.log(status);
+                            for (var property in status) {
+                                if (status.hasOwnProperty(property)) {
+                                    img[property] = status[property];
+                                }
+                            }
+                            console.log(img);
+                            send.push(img);
+                        } else {
+                            send.push(img);
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError2 = true;
+                    _iteratorError2 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                            _iterator2.return();
+                        }
+                    } finally {
+                        if (_didIteratorError2) {
+                            throw _iteratorError2;
                         }
                     }
                 }
