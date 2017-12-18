@@ -148,6 +148,9 @@ module.exports = function () {
     }, {
         key: "change",
         value: function change(imageId, status) {
+            if (!imageId instanceof Array) {
+                imageId = [imageId];
+            }
             var checkStorage = browser.storage.local.get("firefox-uploader-imgur").then(function (obj) {
                 var send = [];
                 var _iteratorNormalCompletion2 = true;
@@ -158,7 +161,7 @@ module.exports = function () {
                     for (var _iterator2 = obj['firefox-uploader-imgur'][Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                         var img = _step2.value;
 
-                        if (img.id == imageId) {
+                        if (imageId.indexOf(img.id) >= 0) {
                             console.log(imageId);
                             console.log(status);
                             for (var property in status) {
@@ -320,11 +323,16 @@ document.addEventListener('click', function (e) {
         copy.setCopy(link);
     }
     if (hasClass(e.target, 'clear-all')) {
-        storage.removeAll();
+        //storage.removeAll();
+
         var link = document.querySelectorAll(".image-url");
+        var manipulateList = [];
         for (var i = 0; i < link.length; i++) {
+            console.log(link[i].querySelector(".close-button").id);
+            manipulateList.push(link[i].querySelector(".close-button").id.split("-close")[0]);
             link[i].parentNode.removeChild(link[i]);
         }
+        storage.change(manipulateList, { "viewable": false });
     }
 }, false);
 

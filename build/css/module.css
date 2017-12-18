@@ -5,6 +5,9 @@ body#panel {
     overflow-y: hidden;
 }
 
+.header-panel div.button{
+  font-size: 14px;
+}
 .image-url {
     margin-top: 3px;
     margin-bottom: 0px;

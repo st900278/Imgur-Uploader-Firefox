@@ -45,10 +45,13 @@ module.exports = class Storage {
         });
     }
     change(imageId, status) {
+        if(!imageId instanceof Array){
+          imageId = [imageId];
+        }
         var checkStorage = browser.storage.local.get("firefox-uploader-imgur").then((obj) => {
             var send = [];
             for (let img of obj['firefox-uploader-imgur']) {
-                if (img.id == imageId) {
+                if (imageId.indexOf(img.id) >= 0) {
                     console.log(imageId);
                     console.log(status);
                     for (var property in status) {

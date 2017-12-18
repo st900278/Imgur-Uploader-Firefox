@@ -38,11 +38,16 @@ document.addEventListener('click', function (e) {
         copy.setCopy(link);
     }
     if (hasClass(e.target, 'clear-all')){
-        storage.removeAll();
+        //storage.removeAll();
+
         var link = document.querySelectorAll(".image-url");
+        var manipulateList = []
         for(let i = 0;i<link.length;i++){
+            console.log(link[i].querySelector(".close-button").id);
+            manipulateList.push(link[i].querySelector(".close-button").id.split("-close")[0]);
             link[i].parentNode.removeChild(link[i]);
         }
+        storage.change(manipulateList, {"viewable": false});
     }
 }, false);
 

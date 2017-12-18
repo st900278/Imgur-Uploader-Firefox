@@ -1,6 +1,10 @@
 $(document).foundation();
-
+var Uploader = require("./imgur.js");
+var Storage = require("./storage.js");
 // fill in default value
+var uploader = new Uploader();
+var storage = new Storage();
+
 browser.storage.local.get("firefox-uploader-client-id").then(result => {
     if(typeof result['firefox-uploader-client-id'] !== "undefined"){
         document.querySelector("#client-id").value = result['firefox-uploader-client-id'];
@@ -27,7 +31,7 @@ browser.storage.local.get('firefox-uploader-imgur').then((value) =>{
     console.log(value);
     for(let x of value['firefox-uploader-imgur'].reverse()){
         console.log(x);
-        if(x == undefined || x.link == undefined || x.viewable == false){
+        if(x == undefined || x.link == undefined){
             continue;
         }
         $(document.getElementById("image-list")).append('\
@@ -35,7 +39,8 @@ browser.storage.local.get('firefox-uploader-imgur').then((value) =>{
               <div class="card">\
                 <img src="'+x.link+'">\
                 <div class="card-section">\
-                    <button type="button" class="alert button delete float-right">Delete</button>\
+                    <h6>'+x.link+'</h6>\
+                    <button type="button" class="alert button delete float-right" data-id="'+x.id+'" data-delete="'+x.deletehash+'">Delete From Imgur</button>\
                 </div>\
               </div>\
             </div>\
@@ -50,7 +55,11 @@ function hasClass(elem, className) {
 }
 document.addEventListener('click', function (e) {
     if (hasClass(e.target, 'delete')) {
-        console.log(e.target);
-
+        uploader.remove(e.target.getAttribute("data-delete")).then(msg => {
+          if(msg.success){
+            storage.remove(e.target.getAttribute("data-id"));
+            e.target.parentNode.parentNode.parentNode.style.display = 'none';
+          }
+        });
     }
 }, false);

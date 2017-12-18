@@ -84,27 +84,4 @@ module.exports = class Uploader {
         return this.imageReader(image).then(this.uploadToImgur.bind(this));
     }
 
-    remove(deletehash){
-      var that = this;
-      return new Promise((resolve, reject) => {
-          var options = {
-              method: "delete",
-              url: "https://api.imgur.com/3/image/" + deletehash,
-              headers: {
-                  authorization: "Client-ID " + that.clientID
-              }
-
-          };
-          console.log(options);
-          request(options, function (error, res, body) {
-              var result = JSON.parse(body);
-              if (!result.data) {
-                  reject(result);
-              } else {
-                  resolve(result);
-              }
-          });
-      });
-    }
-
 }
