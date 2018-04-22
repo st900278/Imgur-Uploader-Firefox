@@ -96,8 +96,7 @@ module.exports = function () {
                     var send = obj['firefox-uploader-imgur'];
 
                     image['viewable'] = true;
-                    console.log("testesestestestestestestestestestestestestestestestesttset");
-                    console.log(image);
+
                     send.push(image);
                     console.log(send);
                     browser.storage.local.set({
@@ -208,8 +207,7 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 1 */,
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -219,7 +217,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var request = __webpack_require__(3);
+var request = __webpack_require__(2);
 module.exports = function () {
     function Uploader() {
         var _this = this;
@@ -351,7 +349,7 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// Browser Request
@@ -854,6 +852,7 @@ function b64_enc (data) {
 
 
 /***/ }),
+/* 3 */,
 /* 4 */,
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -861,7 +860,7 @@ function b64_enc (data) {
 "use strict";
 
 
-var Uploader = __webpack_require__(2);
+var Uploader = __webpack_require__(1);
 var Storage = __webpack_require__(0);
 
 var uploader = new Uploader();
@@ -899,6 +898,7 @@ function uploadFile(e) {
         document.querySelector("#drag-icon").setAttribute("src", "../build/image/loading.png");
         console.log(document.querySelector("#drag-icon").getAttribute("src"));
         browser.runtime.sendMessage({
+            task: "upload",
             file: files[0]
         }).then(function (msg) {
             if (msg.success == true) {
@@ -915,6 +915,7 @@ function uploadUrl(url) {
     document.querySelector("#drag-icon").setAttribute("src", "../build/image/loading.png");
     console.log(document.querySelector("#drag-icon").getAttribute("src"));
     browser.runtime.sendMessage({
+        task: "upload",
         url: url
     }).then(function (msg) {
         if (msg.success == true) {

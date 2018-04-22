@@ -17,8 +17,7 @@ module.exports = class Storage {
                 var send = obj['firefox-uploader-imgur'];
 
                 image['viewable'] = true;
-                console.log("testesestestestestestestestestestestestestestestestesttset");
-                console.log(image);
+
                 send.push(image);
                 console.log(send);
                 browser.storage.local.set({

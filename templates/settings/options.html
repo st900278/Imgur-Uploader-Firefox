@@ -9,78 +9,71 @@
 </head>
 
 <body>
-    <div class="grid-container">
-        <div class="grid-x">
-            <div class="medium-2 cell">
-                <ul class="vertical tabs" data-tabs id="options-tabs">
-                    <li class="tabs-title is-active"><a href="#panel1" aria-selected="true">System</a></li>
-                    <li class="tabs-title"><a href="#panel2">Image Manage</a></li>
-                    <li class="tabs-title"><a href="#panel3">About me</a></li>
 
+    <div class="grid-container">
+        <div class="top-bar">
+            <div class="top-bar-left">
+                <ul class="dropdown menu" data-dropdown-menu>
+                    <li class="menu-text">Imgur Uploader</li>
+                    <li><a href="./options.html">Addon Setting</a></li>
+                    <li><a href="./image_manage.html">Image Manage</a></li>
+                    <li><a href="./aboutme.html">About me</a></li>
                 </ul>
             </div>
-            <div class="medium-10 cell panel">
-                <div class="tabs-content" data-tabs-content="options-tabs">
-                    <div class="tabs-panel is-active" id="panel1">
-                        <form>
-                            <div class="grid-container">
-                                <h4>Imgur</h4>
-                                <div class="grid-x grid-padding-x">
-                                    <div class="medium-6 cell">
-                                        <label>Client-ID
-                                            <input type="text" placeholder="Client-ID" id="client-id">
-                                        </label>
-                                    </div>
+        </div>
+        <div class="grid-x main">
+            <div class="medium-12 cell panel">
+
+                <div class="tabs-panel is-active" id="panel1">
+                    <!--
+                    <form>
+                        <div class="grid-container">
+                            <h4>Imgur</h4>
+                            <div class="grid-x grid-padding-x">
+                                <div class="medium-6 cell">
+                                    <label>Client-ID
+                                        <input type="text" placeholder="Client-ID" id="client-id">
+                                    </label>
                                 </div>
-                                <button class="success button" id="save1">Save</button>
                             </div>
-                        </form>
+                            <button class="success button" id="save-id">Save</button>
+                        </div>
+                    </form>
 
-                        <hr>
-                        <div class="grid-container">
-                            <h4>Auto Copy to Clipboard</h4>
-                            <div class="switch">
-                                <input class="switch-input" id="clipboard-switch" type="checkbox" name="clipboard-switch">
-                                <label class="switch-paddle" for="clipboard-switch">
-                                    <span class="switch-active" aria-hidden="true">Yes</span>
-                                    <span class="switch-inactive" aria-hidden="true">No</span>
-                                </label>
+                    <hr>
+                    -->
+                    <div class="grid-container">
+                        <h4>Imgur Account</h4>
+                        <div class="grid-x grid-padding-x">
+                            <div class="medium-3 cell" id="account">
+
+                            </div>
+                            <div class="medium-9 cell" id="login-btn">
+
                             </div>
                         </div>
 
                     </div>
-                    <div class="tabs-panel" id="panel2">
-                        <div class="grid-x">
-                            <div class="medium-8 cell">
-                                <h3>Image List</h3>
-                            </div>
-                            <div class="medium-4 cell">
-                                <button class="button">3</button>
-                                <button class="button">1</button>
-                            </div>
+                    <hr>
+                    <div class="grid-container">
+                        <h4>Auto Copy to Clipboard</h4>
+                        <div class="switch">
+                            <input class="switch-input" id="clipboard-switch" type="checkbox" name="clipboard-switch">
+                            <label class="switch-paddle" for="clipboard-switch">
+                                <span class="switch-active" aria-hidden="true">Yes</span>
+                                <span class="switch-inactive" aria-hidden="true">No</span>
+                            </label>
                         </div>
-
-                        <div class="grid-container">
-                            <div class="grid-x grid-padding-x small-up-3" id="image-list">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tabs-panel" id="panel3">
-                        <h3>Imgur Uploader</h3>
-                        <ul>
-                            <li>Version: 1.4.1</li>
-                            <li><a href="http://github.com/st900278/Imgur-Uploader-Firefox">Home Page</a></li>
-                        </ul>
-
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
+    </div>
     <script src="../../build/js/jquery.js"></script>
     <script src="../../build/js/foundation.js"></script>
-    <script src="../../build/js/options.bundle.js"></script>
+    <script src="../../build/js/settings_options.bundle.js"></script>
 
 </body>
 

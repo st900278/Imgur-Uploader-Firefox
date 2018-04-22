@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../build/css/foundation.css" />
+    <link rel="stylesheet" href="../../build/css/options.css" />
+</head>
+
+<body>
+
+    <div class="grid-container">
+        <div class="top-bar">
+            <div class="top-bar-left">
+                <ul class="dropdown menu" data-dropdown-menu>
+                    <li class="menu-text">Imgur Uploader</li>
+                    <li><a href="./options.html">Addon Setting</a></li>
+                    <li><a href="./image_manage.html">Image Manage</a></li>
+                    <li><a href="./aboutme.html">About me</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="grid-x main">
+
+            <div class="medium-12 cell panel">
+
+                <div class="grid-x">
+                    <div class="medium-11 cell">
+                        <h3>Image List</h3>
+                    </div>
+                    <div class="medium-1 cell">
+                    </div>
+                </div>
+
+                <div class="grid-container">
+                    <div class="grid-x">
+                        <div class="cell small-2">
+                            <ul class="vertical menu">
+                                <li class="menu-text">Local Image</li>
+                                <li><a href="#" id="local-image">All Image</a></li>
+                                <li class="menu-text">Account Image</li>
+                                <li><a href="#" id="account-image">All Image</a></li>
+                            </ul>
+                        </div>
+                        <div class="cell small-10">
+                            <div class="grid-x  grid-padding-x small-up-3" id="image-list">
+                            </div>
+                            <nav aria-label="Pagination">
+                                <ul class="pagination text-center" id="image-page">
+                                </ul>
+                            </nav>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="../../build/js/jquery.js"></script>
+    <script src="../../build/js/foundation.js"></script>
+    <script src="../../build/js/settings_image_manage.bundle.js"></script>
+
+</body>
+
+</html>

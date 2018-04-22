@@ -36,6 +36,7 @@ function uploadFile(e) {
         document.querySelector("#drag-icon").setAttribute("src", "../build/image/loading.png");
         console.log(document.querySelector("#drag-icon").getAttribute("src"));
         browser.runtime.sendMessage({
+            task: "upload",
             file: files[0]
         }).then((msg) => {
             if (msg.success == true) {
@@ -53,6 +54,7 @@ function uploadUrl(url){
     document.querySelector("#drag-icon").setAttribute("src", "../build/image/loading.png");
     console.log(document.querySelector("#drag-icon").getAttribute("src"));
     browser.runtime.sendMessage({
+        task: "upload",
         url: url
     }).then((msg) => {
         if (msg.success == true) {

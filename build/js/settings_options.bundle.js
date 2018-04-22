@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -852,224 +852,71 @@ function b64_enc (data) {
 
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports.setCopy = function (text) {
-    var id = "clipboard-textarea-hidden-id";
-    var existsTextarea = document.getElementById(id);
-
-    if (!existsTextarea) {
-        console.log("Creating textarea");
-        var textarea = document.createElement("textarea");
-        textarea.id = id;
-        textarea.style.position = 'fixed';
-        textarea.style.top = -100;
-        textarea.style.left = -100;
-        textarea.style.width = '1px';
-        textarea.style.height = '1px';
-        textarea.style.padding = 0;
-        textarea.style.border = 'none';
-        textarea.style.outline = 'none';
-        textarea.style.boxShadow = 'none';
-        textarea.style.background = 'transparent';
-        document.querySelector("body").appendChild(textarea);
-
-        existsTextarea = document.getElementById(id);
-    } else {
-        console.log("The textarea already exists :3");
-    }
-    console.log(existsTextarea);
-    existsTextarea.value = text;
-    existsTextarea.select();
-
-    try {
-        var status = document.execCommand('copy');
-        if (!status) {
-            console.error("Cannot copy text");
-        } else {
-            console.log("The text is now on the clipboard");
-        }
-    } catch (err) {
-        console.log('Unable to copy.');
-    }
-};
-
-/***/ }),
+/* 3 */,
 /* 4 */,
 /* 5 */,
-/* 6 */
+/* 6 */,
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+$(document).foundation();
 var Uploader = __webpack_require__(1);
 var Storage = __webpack_require__(0);
-var copy = __webpack_require__(3);
-
+// fill in default value
 var uploader = new Uploader();
 var storage = new Storage();
-browser.browserAction.setIcon({
-    path: "../icons/favicon.png"
+
+browser.storage.local.get("firefox-uploader-client-id").then(function (result) {
+    if (typeof result['firefox-uploader-client-id'] !== "undefined") {
+        document.querySelector("#client-id").value = result['firefox-uploader-client-id'];
+    }
 });
 
-function onCreated() {
-    if (browser.runtime.lastError) {
-        console.log("error creating item:" + browser.runtime.lastError);
+/*
+document.querySelector("#save-id").addEventListener('click', function(){
+    var clientID = document.querySelector("#client-id").value;
+    browser.storage.local.set({"firefox-uploader-client-id": clientID});
+});
+*/
+
+browser.storage.local.get("firefox-uploader-auth").then(function (item) {
+    var info = item['firefox-uploader-auth'];
+    if (info !== undefined && info['access_token'] !== undefined) {
+        $(document.querySelector("#account")).append('<h4 id="username">' + info['account_username'] + '</h4>');
+        $(document.querySelector("#login-btn")).append('<button type="button" class="button warning" id="logout">Logout</button>');
+        document.querySelector("#logout").addEventListener('click', function () {
+            browser.storage.local.set({ "firefox-uploader-auth": {} });
+            location.reload();
+        });
     } else {
-        console.log("item created successfully");
-    }
-}
-
-browser.storage.onChanged.addListener(function (changes, area) {
-    if (typeof changes['firefox-uploader-client-id'] !== "undefined") {
-        uploader.update();
-    }
-});
-
-function uploadSuccessNotification() {
-    browser.notifications.create("Imgur Uploader", {
-        "type": "basic",
-        "title": "Imgur Uploader",
-        "message": "Upload successful!",
-        "iconUrl": "../../icons/favicon.png"
-    });
-}
-
-function uploadFailNotification() {
-
-    browser.notifications.create("Imgur Uploader", {
-        "type": "basic",
-        "title": "Imgur Uploader",
-        "message": "Upload Failed",
-        "iconUrl": "../../icons/favicon.png"
-    });
-}
-
-function uploadLocalNotification() {
-    browser.notifications.create("Imgur Uploader", {
-        "type": "basic",
-        "title": "Imgur Uploader",
-        "message": "Please use 'Add image' to upload local file",
-        "iconUrl": "../../icons/favicon.png"
-    });
-}
-
-browser.menus.create({
-    id: "image-select",
-    type: "normal",
-    title: "Upload to Imgur",
-    contexts: ["all"],
-    checked: false
-}, onCreated);
-
-browser.menus.onClicked.addListener(function (info, tab) {
-
-    if (info.mediaType == "image") {
-        console.log(info.srcUrl);
-        console.log(info);
-        console.log(uploader);
-        if (info.srcUrl.startsWith("data")) {
-            uploader.uploadToImgur(info.srcUrl.split("base64,")[1]).then(function (e) {
-                browser.storage.local.get('firefox-uploader-auto-copy').then(function (value) {
-                    if (value['firefox-uploader-auto-copy'] == true) {
-                        browser.tabs.query({
-                            currentWindow: true,
-                            active: true
-                        }).then(function (result) {
-                            console.log(result);
-                            browser.tabs.sendMessage(result[0].id, {
-                                link: e.link
-                            });
-                        });
+        $(document.querySelector("#account")).append('<button class="success button" id="auth" >Click to Login</button>');
+        document.querySelector("#auth").addEventListener('click', function () {
+            browser.storage.local.set({ "firefox-uploader-auth": {} });
+            window.open("https://api.imgur.com/oauth2/authorize?client_id=d4488c5d2f5c917&response_type=token&state=FirefoxAddonAuth", '_blank');
+            var getAuth = setInterval(function () {
+                browser.storage.local.get("firefox-uploader-auth").then(function (item) {
+                    console.log(item['firefox-uploader-auth']);
+                    if (item['firefox-uploader-auth']['access_token'] !== undefined) {
+                        location.reload();
                     }
-                });
-
-                storage.add(e);
-            }).then(uploadSuccessNotification, uploadFailNotification);
-        } else if (info.srcUrl.startsWith("file")) {
-            uploadLocalNotification();
-        } else {
-            uploader.uploadToImgur(info.srcUrl).then(function (e) {
-                browser.storage.local.get('firefox-uploader-auto-copy').then(function (value) {
-                    if (value['firefox-uploader-auto-copy'] == true) {
-                        browser.tabs.query({
-                            currentWindow: true,
-                            active: true
-                        }).then(function (result) {
-                            console.log(result);
-                            browser.tabs.sendMessage(result[0].id, {
-                                link: e.link
-                            });
-                        });
-                    }
-                });
-
-                storage.add(e);
-            }).then(uploadSuccessNotification, uploadFailNotification);
-        }
-    }
-});
-
-function handleMessage(request, sender, res) {
-    if (request.task == "upload") {
-        if (request.file) {
-            res({
-                success: true
-            });
-            uploader.uploader(request.file).then(function (e) {
-                console.log(e);
-                browser.storage.local.get('firefox-uploader-auto-copy').then(function (value) {
-                    if (value['firefox-uploader-auto-copy'] == true) {
-                        browser.tabs.query({
-                            active: true
-                        }).then(function (result) {
-                            console.log(result);
-                            browser.tabs.sendMessage(result[0].id, {
-                                link: e.link
-                            });
-                        });
-                    }
-                });
-
-                storage.add(e);
-            }).then(uploadSuccessNotification, uploadFailNotification);
-        } else if (request.url) {
-            res({
-                success: true
-            });
-            uploader.uploadToImgur(request.url.split("base64,")[1]).then(function (e) {
-                console.log(e);
-                storage.add(e);
-                browser.storage.local.get('firefox-uploader-auto-copy').then(function (value) {
-                    console.log("storing");
-                    if (value['firefox-uploader-auto-copy'] == true) {
-                        browser.tabs.query({
-                            active: true
-                        }).then(function (result) {
-                            console.log(result);
-                            browser.tabs.sendMessage(result[0].id, {
-                                link: e.link
-                            });
-                        });
-                    }
-                });
-            }).then(uploadSuccessNotification, uploadFailNotification);
-        }
-    } else if (request.task == "auth") {
-        console.log(request);
-        browser.storage.local.set({ 'firefox-uploader-auth': request }).then(function () {
-            res({ response: "auth set" });
+                }, function () {});
+            }, 3000);
         });
     }
-}
+});
 
-browser.runtime.onMessage.addListener(handleMessage);
+browser.storage.local.get('firefox-uploader-auto-copy').then(function (value) {
+    document.getElementById('clipboard-switch').checked = value['firefox-uploader-auto-copy'];
+});
+
+document.getElementById('clipboard-switch').addEventListener('change', function (e) {
+    console.log(e.target.checked);
+    browser.storage.local.set({ 'firefox-uploader-auto-copy': e.target.checked });
+});
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=background.bundle.js.map
+//# sourceMappingURL=settings_options.bundle.js.map

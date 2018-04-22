@@ -108,48 +108,58 @@ browser.menus.onClicked.addListener(function (info, tab) {
 });
 
 function handleMessage(request, sender, res) {
-    if (request.file) {
-        res({
-            success: true
-        });
-        uploader.uploader(request.file).then(e => {
-            console.log(e);
-            browser.storage.local.get('firefox-uploader-auto-copy').then((value) => {
-                if (value['firefox-uploader-auto-copy'] == true) {
-                    browser.tabs.query({
-                        active: true
-                    }).then(result => {
-                        console.log(result);
-                        browser.tabs.sendMessage(result[0].id, {
-                            link: e.link
-                        });
-                    })
-                }
+    if(request.task == "upload"){
+        if (request.file) {
+            res({
+                success: true
             });
+            uploader.uploader(request.file).then(e => {
+                console.log(e);
+                browser.storage.local.get('firefox-uploader-auto-copy').then((value) => {
+                    if (value['firefox-uploader-auto-copy'] == true) {
+                        browser.tabs.query({
+                            active: true
+                        }).then(result => {
+                            console.log(result);
+                            browser.tabs.sendMessage(result[0].id, {
+                                link: e.link
+                            });
+                        })
+                    }
+                });
 
-            storage.add(e);
-        }).then(uploadSuccessNotification, uploadFailNotification);
-    } else if (request.url) {
-        res({
-            success: true
-        });
-        uploader.uploadToImgur(request.url.split("base64,")[1]).then(e => {
-            console.log(e);
-            storage.add(e);
-            browser.storage.local.get('firefox-uploader-auto-copy').then((value) => {
-                console.log("storing");
-                if (value['firefox-uploader-auto-copy'] == true) {
-                    browser.tabs.query({
-                        active: true
-                    }).then(result => {
-                        console.log(result);
-                        browser.tabs.sendMessage(result[0].id, {
-                            link: e.link
-                        });
-                    })
-                }
+                storage.add(e);
+            }).then(uploadSuccessNotification, uploadFailNotification);
+        } else if (request.url) {
+            res({
+                success: true
             });
-        }).then(uploadSuccessNotification, uploadFailNotification);
+            uploader.uploadToImgur(request.url.split("base64,")[1]).then(e => {
+                console.log(e);
+                storage.add(e);
+                browser.storage.local.get('firefox-uploader-auto-copy').then((value) => {
+                    console.log("storing");
+                    if (value['firefox-uploader-auto-copy'] == true) {
+                        browser.tabs.query({
+                            active: true
+                        }).then(result => {
+                            console.log(result);
+                            browser.tabs.sendMessage(result[0].id, {
+                                link: e.link
+                            });
+                        })
+                    }
+                });
+            }).then(uploadSuccessNotification, uploadFailNotification);
+        }
+
+
+    }
+    else if(request.task == "auth"){
+        console.log(request);
+        browser.storage.local.set({'firefox-uploader-auth': request}).then(() => {
+            res({response: "auth set"});
+        })
     }
 }
 

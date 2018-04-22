@@ -60,17 +60,40 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 7:
-/***/ (function(module, exports) {
+/***/ 10:
+/***/ (function(module, exports, __webpack_require__) {
 
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/home/kuzlab-oberon/workspace/Imgur-Uploader-Firefox/src/options.js'\n    at Error (native)");
+"use strict";
+
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var href = location.href;
+if (href.indexOf("state=FirefoxAddonAuth") > -1) {
+    var infoStr = href.split("state=FirefoxAddonAuth#")[1].split("&");
+    var info = { "task": "auth" };
+    infoStr.forEach(function (item) {
+        var _item$split = item.split("="),
+            _item$split2 = _slicedToArray(_item$split, 2),
+            key = _item$split2[0],
+            value = _item$split2[1];
+
+        info[key] = value;
+    });
+    console.log(info);
+    browser.runtime.sendMessage(info).then(function () {
+        console.log("success");
+    }, function () {
+        console.log("failed");
+    });
+}
 
 /***/ })
 
 /******/ });
-//# sourceMappingURL=options.bundle.js.map
+//# sourceMappingURL=token.bundle.js.map

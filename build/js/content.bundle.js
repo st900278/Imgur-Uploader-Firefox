@@ -60,12 +60,12 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 1:
+/***/ 3:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -113,15 +113,14 @@ module.exports.setCopy = function (text) {
 
 /***/ }),
 
-/***/ 8:
+/***/ 9:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var copy = __webpack_require__(1);
+var copy = __webpack_require__(3);
 
-console.log("test");
 browser.runtime.onMessage.addListener(function (request) {
     console.log(request);
     copy.setCopy(request.link);

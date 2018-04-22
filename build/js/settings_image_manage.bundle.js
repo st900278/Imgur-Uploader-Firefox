@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -852,224 +852,222 @@ function b64_enc (data) {
 
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports.setCopy = function (text) {
-    var id = "clipboard-textarea-hidden-id";
-    var existsTextarea = document.getElementById(id);
-
-    if (!existsTextarea) {
-        console.log("Creating textarea");
-        var textarea = document.createElement("textarea");
-        textarea.id = id;
-        textarea.style.position = 'fixed';
-        textarea.style.top = -100;
-        textarea.style.left = -100;
-        textarea.style.width = '1px';
-        textarea.style.height = '1px';
-        textarea.style.padding = 0;
-        textarea.style.border = 'none';
-        textarea.style.outline = 'none';
-        textarea.style.boxShadow = 'none';
-        textarea.style.background = 'transparent';
-        document.querySelector("body").appendChild(textarea);
-
-        existsTextarea = document.getElementById(id);
-    } else {
-        console.log("The textarea already exists :3");
-    }
-    console.log(existsTextarea);
-    existsTextarea.value = text;
-    existsTextarea.select();
-
-    try {
-        var status = document.execCommand('copy');
-        if (!status) {
-            console.error("Cannot copy text");
-        } else {
-            console.log("The text is now on the clipboard");
-        }
-    } catch (err) {
-        console.log('Unable to copy.');
-    }
-};
-
-/***/ }),
+/* 3 */,
 /* 4 */,
 /* 5 */,
-/* 6 */
+/* 6 */,
+/* 7 */,
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+$(document).foundation();
 var Uploader = __webpack_require__(1);
 var Storage = __webpack_require__(0);
-var copy = __webpack_require__(3);
-
+// fill in default value
 var uploader = new Uploader();
 var storage = new Storage();
-browser.browserAction.setIcon({
-    path: "../icons/favicon.png"
+var currentPage = (location.hash || "#1").slice(1);
+var status = 0; // 0 local   1 account
+var pageSegment = 15;
+var login = false;
+browser.storage.local.get("firefox-uploader-client-id").then(function (result) {
+    if (typeof result['firefox-uploader-client-id'] !== "undefined") {
+        document.querySelector("#client-id").value = result['firefox-uploader-client-id'];
+    }
 });
 
-function onCreated() {
-    if (browser.runtime.lastError) {
-        console.log("error creating item:" + browser.runtime.lastError);
+browser.storage.local.get('firefox-uploader-auth').then(function (value) {
+    console.log(value);
+    var token = value['firefox-uploader-auth']['access_token'];
+    if (token) {
+        login = true;
     } else {
-        console.log("item created successfully");
-    }
-}
-
-browser.storage.onChanged.addListener(function (changes, area) {
-    if (typeof changes['firefox-uploader-client-id'] !== "undefined") {
-        uploader.update();
+        console.log("out");
+        $("#account-image").css({ color: "grey", cursor: "default" });
     }
 });
 
-function uploadSuccessNotification() {
-    browser.notifications.create("Imgur Uploader", {
-        "type": "basic",
-        "title": "Imgur Uploader",
-        "message": "Upload successful!",
-        "iconUrl": "../../icons/favicon.png"
-    });
-}
+loadLocal();
 
-function uploadFailNotification() {
+document.getElementById("local-image").addEventListener("click", function () {
+    currentPage = 1;
+    status = 0;
+    loadLocal();
+});
 
-    browser.notifications.create("Imgur Uploader", {
-        "type": "basic",
-        "title": "Imgur Uploader",
-        "message": "Upload Failed",
-        "iconUrl": "../../icons/favicon.png"
-    });
-}
-
-function uploadLocalNotification() {
-    browser.notifications.create("Imgur Uploader", {
-        "type": "basic",
-        "title": "Imgur Uploader",
-        "message": "Please use 'Add image' to upload local file",
-        "iconUrl": "../../icons/favicon.png"
-    });
-}
-
-browser.menus.create({
-    id: "image-select",
-    type: "normal",
-    title: "Upload to Imgur",
-    contexts: ["all"],
-    checked: false
-}, onCreated);
-
-browser.menus.onClicked.addListener(function (info, tab) {
-
-    if (info.mediaType == "image") {
-        console.log(info.srcUrl);
-        console.log(info);
-        console.log(uploader);
-        if (info.srcUrl.startsWith("data")) {
-            uploader.uploadToImgur(info.srcUrl.split("base64,")[1]).then(function (e) {
-                browser.storage.local.get('firefox-uploader-auto-copy').then(function (value) {
-                    if (value['firefox-uploader-auto-copy'] == true) {
-                        browser.tabs.query({
-                            currentWindow: true,
-                            active: true
-                        }).then(function (result) {
-                            console.log(result);
-                            browser.tabs.sendMessage(result[0].id, {
-                                link: e.link
-                            });
-                        });
-                    }
-                });
-
-                storage.add(e);
-            }).then(uploadSuccessNotification, uploadFailNotification);
-        } else if (info.srcUrl.startsWith("file")) {
-            uploadLocalNotification();
-        } else {
-            uploader.uploadToImgur(info.srcUrl).then(function (e) {
-                browser.storage.local.get('firefox-uploader-auto-copy').then(function (value) {
-                    if (value['firefox-uploader-auto-copy'] == true) {
-                        browser.tabs.query({
-                            currentWindow: true,
-                            active: true
-                        }).then(function (result) {
-                            console.log(result);
-                            browser.tabs.sendMessage(result[0].id, {
-                                link: e.link
-                            });
-                        });
-                    }
-                });
-
-                storage.add(e);
-            }).then(uploadSuccessNotification, uploadFailNotification);
-        }
+document.getElementById("account-image").addEventListener("click", function () {
+    if (login == true) {
+        currentPage = 1;
+        status = 1;
+        loadAccount();
     }
 });
 
-function handleMessage(request, sender, res) {
-    if (request.task == "upload") {
-        if (request.file) {
-            res({
-                success: true
-            });
-            uploader.uploader(request.file).then(function (e) {
-                console.log(e);
-                browser.storage.local.get('firefox-uploader-auto-copy').then(function (value) {
-                    if (value['firefox-uploader-auto-copy'] == true) {
-                        browser.tabs.query({
-                            active: true
-                        }).then(function (result) {
-                            console.log(result);
-                            browser.tabs.sendMessage(result[0].id, {
-                                link: e.link
-                            });
-                        });
-                    }
-                });
+function hasClass(elem, className) {
+    return elem.className.split(' ').indexOf(className) > -1;
+}
 
-                storage.add(e);
-            }).then(uploadSuccessNotification, uploadFailNotification);
-        } else if (request.url) {
-            res({
-                success: true
-            });
-            uploader.uploadToImgur(request.url.split("base64,")[1]).then(function (e) {
-                console.log(e);
-                storage.add(e);
-                browser.storage.local.get('firefox-uploader-auto-copy').then(function (value) {
-                    console.log("storing");
-                    if (value['firefox-uploader-auto-copy'] == true) {
-                        browser.tabs.query({
-                            active: true
-                        }).then(function (result) {
-                            console.log(result);
-                            browser.tabs.sendMessage(result[0].id, {
-                                link: e.link
-                            });
-                        });
+function loadLocal() {
+    document.getElementById("image-list").innerHTML = "";
+    document.getElementById("image-page").innerHTML = "";
+    browser.storage.local.get('firefox-uploader-imgur').then(function (value) {
+        console.log(value);
+        var image = value['firefox-uploader-imgur'].reverse();
+        var page = Math.ceil(image.length / pageSegment);
+        if (page > 0) {
+            if (page > 7) {
+                var start = currentPage <= 4 ? 1 : currentPage + 3 > page ? page - 6 : currentPage - 3;
+                var end = start + 6;
+                for (var i = start; i <= end; i++) {
+                    $(document.getElementById("image-page")).append('<li><a class="page-href"  attr-page="' + i + '"  aria-label="Page ' + i + '">' + i + '</a></li>');
+                }
+            } else {
+                for (var _i = 1; _i <= page; _i++) {
+                    $(document.getElementById("image-page")).append('<li><a class="page-href"  attr-page="' + _i + '"  aria-label="Page ' + _i + '">' + _i + '</a></li>');
+                }
+            }
+            $(document.querySelector("[aria-label='Page " + currentPage + "']")).parent().addClass("current");
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = value['firefox-uploader-imgur'].slice((currentPage - 1) * pageSegment, currentPage * pageSegment)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var x = _step.value;
+
+                    console.log(x);
+                    if (x == undefined || x.link == undefined) {
+                        continue;
                     }
-                });
-            }).then(uploadSuccessNotification, uploadFailNotification);
+                    $(document.getElementById("image-list")).append('\
+                    <div class="cell">\
+                      <div class="card">\
+                        <img src="' + x.link + '">\
+                        <div class="card-section">\
+                            <h6>' + x.link + '</h6>\
+                            <button type="button" class="alert button delete float-right" data-id="' + x.id + '" data-delete="' + x.deletehash + '">Delete From Imgur</button>\
+                        </div>\
+                      </div>\
+                    </div>\
+                ');
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
         }
-    } else if (request.task == "auth") {
-        console.log(request);
-        browser.storage.local.set({ 'firefox-uploader-auth': request }).then(function () {
-            res({ response: "auth set" });
+    });
+}
+function loadAccount() {
+    document.getElementById("image-list").innerHTML = "";
+    document.getElementById("image-page").innerHTML = "";
+    browser.storage.local.get('firefox-uploader-auth').then(function (value) {
+        console.log(value);
+        var token = value['firefox-uploader-auth']['access_token'];
+        console.log(token);
+        $.ajax({
+            url: "https://api.imgur.com/3/account/me/images",
+            headers: { 'Authorization': 'Bearer ' + token }
+
+        }).done(function (data) {
+            var image = data.data;
+            var page = Math.ceil(image.length / pageSegment);
+            if (page > 0) {
+                console.log("test");
+
+                if (page > 7) {
+                    var start = currentPage <= 4 ? 1 : currentPage + 3 > page ? page - 6 : currentPage - 3;
+                    var end = start + 6;
+                    for (var i = start; i <= end; i++) {
+                        $(document.getElementById("image-page")).append('<li><a class="page-href"  attr-page="' + i + '" aria-label="Page ' + i + '">' + i + '</a></li>');
+                    }
+                } else {
+                    for (var _i2 = 1; _i2 <= page; _i2++) {
+                        $(document.getElementById("image-page")).append('<li><a class="page-href" attr-page="' + _i2 + '" aria-label="Page ' + _i2 + '">' + _i2 + '</a></li>');
+                    }
+                }
+                $(document.querySelector("[aria-label='Page " + currentPage + "']")).parent().addClass("current");
+                //$(document.querySelector("a.page-href"))
+
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
+
+                try {
+                    for (var _iterator2 = image.slice((currentPage - 1) * pageSegment, currentPage * pageSegment)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        var x = _step2.value;
+
+                        console.log(x);
+                        if (x == undefined || x.link == undefined) {
+                            continue;
+                        }
+                        $(document.getElementById("image-list")).append('\
+                        <div class="cell">\
+                          <div class="card">\
+                            <img src="' + x.link + '">\
+                            <div class="card-section">\
+                                <h6>' + x.link + '</h6>\
+                                <button type="button" class="alert button delete float-right" data-id="' + x.id + '" data-delete="' + x.deletehash + '">Delete From Imgur</button>\
+                            </div>\
+                          </div>\
+                        </div>\
+                    ');
+                    }
+                } catch (err) {
+                    _didIteratorError2 = true;
+                    _iteratorError2 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                            _iterator2.return();
+                        }
+                    } finally {
+                        if (_didIteratorError2) {
+                            throw _iteratorError2;
+                        }
+                    }
+                }
+            }
         });
-    }
+    });
 }
+document.addEventListener('click', function (e) {
+    if (hasClass(e.target, 'delete')) {
+        uploader.remove(e.target.getAttribute("data-delete")).then(function (msg) {
+            if (msg.success) {
+                storage.remove(e.target.getAttribute("data-id"));
+                e.target.parentNode.parentNode.parentNode.style.display = 'none';
+            }
+        });
+    } else if (hasClass(e.target, 'page-href')) {
 
-browser.runtime.onMessage.addListener(handleMessage);
+        currentPage = e.target.getAttribute("attr-page");
+        console.log(status);
+        console.log(currentPage);
+        if (status == 0) {
+            loadLocal();
+        } else {
+            loadAccount();
+        }
+        console.log(e.target);
+        //location.hash = e.target.hash;
+        //location.reload();
+    }
+}, false);
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=background.bundle.js.map
+//# sourceMappingURL=settings_image_manage.bundle.js.map

@@ -96,8 +96,7 @@ module.exports = function () {
                     var send = obj['firefox-uploader-imgur'];
 
                     image['viewable'] = true;
-                    console.log("testesestestestestestestestestestestestestestestestesttset");
-                    console.log(image);
+
                     send.push(image);
                     console.log(send);
                     browser.storage.local.set({
@@ -208,7 +207,9 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 1 */
+/* 1 */,
+/* 2 */,
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -255,8 +256,6 @@ module.exports.setCopy = function (text) {
 };
 
 /***/ }),
-/* 2 */,
-/* 3 */,
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -265,7 +264,7 @@ module.exports.setCopy = function (text) {
 
 var Storage = __webpack_require__(0);
 var storage = new Storage();
-var copy = __webpack_require__(1);
+var copy = __webpack_require__(3);
 
 browser.storage.local.get('firefox-uploader-imgur').then(function (value) {
     console.log(value);
