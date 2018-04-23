@@ -8,6 +8,29 @@ browser.browserAction.setIcon({
     path: "../icons/favicon.png"
 });
 
+browser.storage.local.get("firefox-uploader-announce").then(res => {
+    if(res['firefox-uploader-announce'] === undefined){
+        browser.storage.local.set({"firefox-uploader-announce":{'1.5.0':'true'}}).then(()=>{
+            var creating = browser.tabs.create({
+              url: "../templates/announce/1.5.0.html"
+            });
+        });
+    }
+    else{
+        if(res['firefox-uploader-announce']['1.5.0'] === undefined){
+            res['firefox-uploader-announce']['1.5.0'] = "true";
+            browser.storage.local.set({"firefox-uploader-announce": res['firefox-uploader-announce']});
+            var creating = browser.tabs.create({
+              url: "../templates/announce/1.5.0.html"
+            });
+        };
+    }
+
+
+})
+
+
+
 function onCreated() {
     if (browser.runtime.lastError) {
         console.log("error creating item:" + browser.runtime.lastError);
