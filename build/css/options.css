@@ -9,10 +9,6 @@ div.tabs-content{
     min-height: 100vh;
 }
 
-img{
-    max-height: 150px;
-}
-
 .main {
- margin-top: 10px;
+    margin-top: 10px;
 }
