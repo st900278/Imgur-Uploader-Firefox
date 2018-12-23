@@ -1054,7 +1054,7 @@ document.addEventListener('click', function (e) {
         });
     } else if (hasClass(e.target, 'page-href')) {
 
-        currentPage = e.target.getAttribute("attr-page");
+        currentPage = parseInt(e.target.getAttribute("attr-page"));
         console.log(status);
         console.log(currentPage);
         if (status == 0) {
