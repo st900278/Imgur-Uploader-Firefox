@@ -919,17 +919,17 @@ browser.browserAction.setIcon({
 
 browser.storage.local.get("firefox-uploader-announce").then(function (res) {
     if (res['firefox-uploader-announce'] === undefined) {
-        browser.storage.local.set({ "firefox-uploader-announce": { '1.5.2': 'true' } }).then(function () {
+        browser.storage.local.set({ "firefox-uploader-announce": { '1.5.3': 'true' } }).then(function () {
             var creating = browser.tabs.create({
-                url: "../templates/announce/1.5.2.html"
+                url: "../templates/announce/1.5.3.html"
             });
         });
     } else {
-        if (res['firefox-uploader-announce']['1.5.2'] === undefined) {
-            res['firefox-uploader-announce']['1.5.2'] = "true";
+        if (res['firefox-uploader-announce']['1.5.3'] === undefined) {
+            res['firefox-uploader-announce']['1.5.3'] = "true";
             browser.storage.local.set({ "firefox-uploader-announce": res['firefox-uploader-announce'] });
             var creating = browser.tabs.create({
-                url: "../templates/announce/1.5.2.html"
+                url: "../templates/announce/1.5.3.html"
             });
         };
     }

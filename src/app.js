@@ -10,7 +10,7 @@ browser.storage.local.get('firefox-uploader-imgur').then((value) =>{
             continue;
         }
         $(document.getElementById("image-list")).append('<div class="callout small image-url" data-closable data-url="'+x.link+'">\
-            <p><img src="https://i.imgur.com/'+x.id+'.jpg" class="preview"> <span class="link">'+x.link+'</span><button class="copy-clipboard" id="'+x.id+'-copy">Copy</button></p>\
+            <p><img src="https://i.imgur.com/'+x.id+'.jpg" class="preview"> <span class="link">'+x.link+'</span><button class="copy-clipboard" id="'+x.link+'-copy">Copy</button></p>\
             <button class="close-button" aria-label="Dismiss alert" type="button"  id="'+x.id+'-close" data-close>\
             <span aria-hidden="true">&times;</span>\
             </button>\
@@ -33,8 +33,8 @@ document.addEventListener('click', function (e) {
         //storage.remove(e.target.id.split("-close")[0]);
     }
     if(hasClass(e.target, 'copy-clipboard')){
-        console.log(e.target.id.split("-copy")[0]);
-        var link = "https://i.imgur.com/"+e.target.id.split("-copy")[0]+".jpg";
+        //var link = "https://i.imgur.com/"+e.target.id.split("-copy")[0]+".jpg";
+        var link = e.target.id.split("-copy")[0];
         copy.setCopy(link);
     }
     if (hasClass(e.target, 'clear-all')){
