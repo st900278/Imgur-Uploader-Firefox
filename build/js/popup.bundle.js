@@ -283,7 +283,7 @@ browser.storage.local.get('firefox-uploader-imgur').then(function (value) {
             $(document.getElementById("image-list")).append('<div class="callout small image-url" data-closable data-url="' + x.link + '">\
             <p><img src="https://i.imgur.com/' + x.id + '.jpg" class="preview"> <span class="link">' + x.link + '</span><button class="copy-clipboard" id="' + x.link + '-copy">Copy</button></p>\
             <button class="close-button" aria-label="Dismiss alert" type="button"  id="' + x.id + '-close" data-close>\
-            <span aria-hidden="true">&times;</span>\
+            <span aria-hidden="true" class="close-button-bubble">&times;</span>\
             </button>\
         </div>');
         }
@@ -315,6 +315,10 @@ document.addEventListener('click', function (e) {
         console.log(e.target.id);
         storage.change(e.target.id.split("-close")[0], { "viewable": false });
         //storage.remove(e.target.id.split("-close")[0]);
+    }
+    if (hasClass(e.target, 'close-button-bubble')) {
+        console.log(e.target.id);
+        storage.change(e.target.parentNode.id.split("-close")[0], { "viewable": false });
     }
     if (hasClass(e.target, 'copy-clipboard')) {
         //var link = "https://i.imgur.com/"+e.target.id.split("-copy")[0]+".jpg";
