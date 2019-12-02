@@ -1,16 +1,16 @@
-var Uploader = require("./imgur.js");
-var Storage = require("./storage.js");
+const Uploader = require("./imgur.js");
+const Storage = require("./storage.js");
 
-var uploader = new Uploader();
-var storage = new Storage();
+const uploader = new Uploader();
+const storage = new Storage();
 
 function getExtension(filename) {
-    var parts = filename.split('.');
+    const parts = filename.split('.');
     return parts[parts.length - 1];
 }
 
 function isImage(filename) {
-    var ext = getExtension(filename);
+    const ext = getExtension(filename);
     switch (ext.toLowerCase()) {
     case 'jpg':
     case 'jpeg':
@@ -30,7 +30,7 @@ function removeEvent() {
 function uploadFile(e) {
     e.stopPropagation();
     e.preventDefault();
-    var files = e.target.files || e.dataTransfer.files;
+    const files = e.target.files || e.dataTransfer.files;
     if (isImage(files[0].name)) {
         removeEvent();
         document.querySelector("#drag-icon").setAttribute("src", "../build/image/loading.png");
@@ -40,8 +40,8 @@ function uploadFile(e) {
             file: files[0]
         }).then((msg) => {
             if (msg.success == true) {
-                var winId = browser.windows.WINDOW_ID_CURRENT;
-                var removing = browser.windows.remove(winId);
+                const winId = browser.windows.WINDOW_ID_CURRENT;
+                const removing = browser.windows.remove(winId);
             }
         });
     } else {
@@ -58,8 +58,8 @@ function uploadUrl(url){
         url: url
     }).then((msg) => {
         if (msg.success == true) {
-            var winId = browser.windows.WINDOW_ID_CURRENT;
-            var removing = browser.windows.remove(winId);
+            const winId = browser.windows.WINDOW_ID_CURRENT;
+            const removing = browser.windows.remove(winId);
         }
     });
 }
@@ -89,15 +89,15 @@ document.querySelector("#click-image").addEventListener('click', function () {
 document.querySelector("#add-file").addEventListener('change', uploadFile, false);
 
 window.addEventListener("paste", (e) => {
-    var items = e.clipboardData.items;
+    const items = e.clipboardData.items;
     for (let i = 0; i < items.length; i++) {
         if (items[i].type.indexOf("image") == -1) continue;
         console.log("test");
-        var blob = items[i].getAsFile();
+        const blob = items[i].getAsFile();
 
-        var mycanvas = document.createElement("canvas");
-        var ctx = mycanvas.getContext('2d');
-        var img = new Image();
+        const mycanvas = document.createElement("canvas");
+        const ctx = mycanvas.getContext('2d');
+        const img = new Image();
         img.onload = function () {
             mycanvas.width = this.width;
             mycanvas.height = this.height;
@@ -106,7 +106,7 @@ window.addEventListener("paste", (e) => {
             uploadUrl(mycanvas.toDataURL());
         };
 
-        var URLObj = window.URL || window.webkitURL;
+        const URLObj = window.URL || window.webkitURL;
 
         img.src = URLObj.createObjectURL(blob);
     }

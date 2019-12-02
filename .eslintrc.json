@@ -1,0 +1,47 @@
+{
+  "extends": "airbnb",
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true
+  },
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  "rules": {
+    "indent": [
+      "error",
+      4
+    ],
+    "linebreak-style": "off",
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "no-param-reassign": [
+      "error",
+      {
+        "props": false
+      }
+    ],
+    "no-console": "off",
+    "strict": [
+      0,
+      "global"
+    ],
+    "prefer-rest-params": "off",
+    "class-methods-use-this": "off",
+    "prefer-destructuring": "off",
+    "no-unused-expressions": 0,
+    "function-paren-newline": "off",
+    "implicit-arrow-linebreak": 0
+  }
+}

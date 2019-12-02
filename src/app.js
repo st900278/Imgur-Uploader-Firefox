@@ -1,6 +1,6 @@
-var Storage = require("./storage.js");
-var storage = new Storage();
-var copy = require("./copy.js");
+const Storage = require("./storage.js");
+const storage = new Storage();
+const copy = require("./copy.js");
 
 browser.storage.local.get('firefox-uploader-imgur').then((value) =>{
     console.log(value);
@@ -38,14 +38,14 @@ document.addEventListener('click', function (e) {
     }
     if(hasClass(e.target, 'copy-clipboard')){
         //var link = "https://i.imgur.com/"+e.target.id.split("-copy")[0]+".jpg";
-        var link = e.target.id.split("-copy")[0];
+        const link = e.target.id.split("-copy")[0];
         copy.setCopy(link);
     }
     if (hasClass(e.target, 'clear-all')){
         //storage.removeAll();
 
-        var link = document.querySelectorAll(".image-url");
-        var manipulateList = []
+        const link = document.querySelectorAll(".image-url");
+        const manipulateList = []
         for(let i = 0;i<link.length;i++){
             console.log(link[i].querySelector(".close-button").id);
             manipulateList.push(link[i].querySelector(".close-button").id.split("-close")[0]);
@@ -65,15 +65,13 @@ document.addEventListener('mouseover', function (e) {
         console.log(e.pageX);
         console.log(e.pageY);
         console.log(e.target.attributes);
-        var viewer = $(document.querySelector("div.viewer"));
+        const viewer = $(document.querySelector("div.viewer"));
         viewer.show().css({
             left: "100px",
             top: e.pageY-30
         });
 
         viewer.children("img").attr("src", e.target.getAttribute("src"));
-
-
     }
 }, false);
 
@@ -86,7 +84,7 @@ document.addEventListener('mouseout', function (e) {
 
 document.querySelector("#add-image").addEventListener('click', function () {
 
-    var createData = {
+    const createData = {
         type: "detached_panel",
         titlePreface: "Upload Image",
         url: "../templates/panel.html",
@@ -95,7 +93,8 @@ document.querySelector("#add-image").addEventListener('click', function () {
         left:100,
         allowScriptsToClose: true
     };
-    var creating = browser.windows.create(createData);
+
+    const creating = browser.windows.create(createData);
     console.log("test");
 });
 

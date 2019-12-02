@@ -1,9 +1,9 @@
 $(document).foundation();
-var Uploader = require("./../imgur.js");
-var Storage = require("./../storage.js");
+const Uploader = require("./../imgur.js");
+const Storage = require("./../storage.js");
 // fill in default value
-var uploader = new Uploader();
-var storage = new Storage();
+const uploader = new Uploader();
+const storage = new Storage();
 
 browser.storage.local.get("firefox-uploader-client-id").then(result => {
     if(typeof result['firefox-uploader-client-id'] !== "undefined"){
@@ -33,14 +33,15 @@ browser.storage.local.get("firefox-uploader-auth").then((item)=>{
         document.querySelector("#auth").addEventListener('click', function(){
             browser.storage.local.set({"firefox-uploader-auth":{}});
             window.open("https://api.imgur.com/oauth2/authorize?client_id=d4488c5d2f5c917&response_type=token&state=FirefoxAddonAuth", '_blank');
-            var getAuth = setInterval(() => {
-                browser.storage.local.get("firefox-uploader-auth").then((item)=>{
+            const getAuth = setInterval(() => {
+                browser.storage.local.get("firefox-uploader-auth").then((item) => {
                     console.log(item['firefox-uploader-auth']);
-                    if(item['firefox-uploader-auth']['access_token'] !== undefined){
+                    if (item['firefox-uploader-auth']['access_token'] !== undefined) {
                         location.reload();
                     }
 
-                }, ()=>{});
+                }, () => {
+                });
             }, 3000);
         });
     }
