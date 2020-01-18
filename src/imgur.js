@@ -1,4 +1,4 @@
-var request = require("browser-request");
+var request = require('browser-request');
 module.exports = class Uploader {
     constructor() {
         browser.storage.local.get("firefox-uploader-client-id").then((result) => {

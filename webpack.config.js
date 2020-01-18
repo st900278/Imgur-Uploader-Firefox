@@ -15,17 +15,17 @@ module.exports = {
         filename: '[name].bundle.js'
     },
     devtool: 'source-map',
-
-    module:{
-        loaders:[
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                loader: "babel-loader",
-                query: {
-                    presets: ['babel-preset-es2015']
-                }
-            }
-        ]
-    }
-};
+    module: {
+    rules: [{
+      exclude: ['/node_modules/', '/node_modules/idb-file-storage'],
+      test: /\.js$/,
+      use: [
+        // This transpiles all code (except for third party modules) using Babel.
+        {
+          // Babel options are in .babelrc
+          loader: 'babel-loader',
+        },
+      ]
+    }]
+  }
+}

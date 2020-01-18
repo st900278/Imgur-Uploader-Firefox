@@ -1,6 +1,14 @@
-# Imgur-Uploader-Firefox
+# mozilla firefox imgur uploader
 
-Addon for user to upload image to imgur in Firefox 57
+mozilla firefox imgur uploader
 
-## Addon url
-https://addons.mozilla.org/en-US/firefox/addon/imgur-upload/
+```
+$ NODE_PATH=/usr/local/lib/node_modules webpack
+```
+
+```
+Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
+ - configuration.module has an unknown property 'loaders'. These properties are valid:
+   object { defaultRules?, exprContextCritical?, exprContextRecursive?, exprContextRegExp?, exprContextRequest?, noParse?, rules?, strictExportPresence?, strictThisContextOnImports?, unknownContextCritical?, unknownContextRecursive?, unknownContextRegExp?, unknownContextRequest?, unsafeCache?, wrappedContextCritical?, wrappedContextRecursive?, wrappedContextRegExp? }
+   -> Options affecting the normal modules (`NormalModuleFactory`).
+```
