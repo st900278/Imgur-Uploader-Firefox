@@ -1,13 +1,13 @@
 $(document).foundation();
-var Uploader = require("./../imgur.js");
-var Storage = require("./../storage.js");
+const Uploader = require("./../imgur.js");
+const Storage = require("./../storage.js");
 // fill in default value
-var uploader = new Uploader();
-var storage = new Storage();
-var currentPage = (location.hash || "#1").slice(1);
-var status = 0;   // 0 local   1 account
-var pageSegment = 15;
-var login = false;
+const uploader = new Uploader();
+const storage = new Storage();
+let currentPage = (location.hash || "#1").slice(1);
+let status = 0;   // 0 local   1 account
+const pageSegment = 15;
+let login = false;
 browser.storage.local.get("firefox-uploader-client-id").then(result => {
     if (typeof result['firefox-uploader-client-id'] !== "undefined") {
         document.querySelector("#client-id").value = result['firefox-uploader-client-id'];
@@ -16,7 +16,7 @@ browser.storage.local.get("firefox-uploader-client-id").then(result => {
 
 browser.storage.local.get('firefox-uploader-auth').then((value) => {
     console.log(value);
-    var token = value['firefox-uploader-auth']['access_token'];
+    const token = value['firefox-uploader-auth']['access_token'];
     if(token){
         login = true;
     }
@@ -96,14 +96,14 @@ function loadAccount(){
     document.getElementById("image-page").innerHTML = "";
     browser.storage.local.get('firefox-uploader-auth').then((value) => {
         console.log(value);
-        var token = value['firefox-uploader-auth']['access_token'];
+        const token = value['firefox-uploader-auth']['access_token'];
         console.log(token);
         $.ajax({
             url: "https://api.imgur.com/3/account/me/images",
             headers: {'Authorization': 'Bearer ' + token},
 
         }).done(data=>{
-            var image = data.data;
+            const image = data.data;
             let page = Math.ceil(image.length / pageSegment);
             if (page > 0) {
                 console.log("test");

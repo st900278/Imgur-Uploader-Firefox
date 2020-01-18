@@ -1,10 +1,10 @@
 module.exports.setCopy = function(text){
-    var id = "clipboard-textarea-hidden-id";
-    var existsTextarea = document.getElementById(id);
+    const id = "clipboard-textarea-hidden-id";
+    let existsTextarea = document.getElementById(id);
 
-    if(!existsTextarea){
+    if (!existsTextarea) {
         console.log("Creating textarea");
-        var textarea = document.createElement("textarea");
+        const textarea = document.createElement("textarea");
         textarea.id = id;
         textarea.style.position = 'fixed';
         textarea.style.top = -100;
@@ -19,7 +19,7 @@ module.exports.setCopy = function(text){
         document.querySelector("body").appendChild(textarea);
 
         existsTextarea = document.getElementById(id);
-    }else{
+    } else {
         console.log("The textarea already exists :3")
     }
     console.log(existsTextarea);
@@ -27,10 +27,10 @@ module.exports.setCopy = function(text){
     existsTextarea.select();
 
     try {
-        var status = document.execCommand('copy');
-        if(!status){
+        const status = document.execCommand('copy');
+        if (!status) {
             console.error("Cannot copy text");
-        }else{
+        } else {
             console.log("The text is now on the clipboard");
         }
     } catch (err) {

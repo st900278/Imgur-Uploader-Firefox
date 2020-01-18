@@ -13,8 +13,8 @@ module.exports = class Storage {
 
     add(image) {
         return new Promise((resolve, reject) => {
-            var checkStorage = browser.storage.local.get("firefox-uploader-imgur").then((obj) => {
-                var send = obj['firefox-uploader-imgur'];
+            const checkStorage = browser.storage.local.get("firefox-uploader-imgur").then((obj) => {
+                const send = obj['firefox-uploader-imgur'];
 
                 image['viewable'] = true;
 
@@ -31,8 +31,8 @@ module.exports = class Storage {
     }
 
     remove(imageId) {
-        var checkStorage = browser.storage.local.get("firefox-uploader-imgur").then((obj) => {
-            var send = [];
+        const checkStorage = browser.storage.local.get("firefox-uploader-imgur").then((obj) => {
+            const send = [];
             for (let img of obj['firefox-uploader-imgur']) {
                 if (img.id != imageId) {
                     send.push(img);
@@ -44,16 +44,17 @@ module.exports = class Storage {
         });
     }
     change(imageId, status) {
-        if(!imageId instanceof Array){
+        if (!imageId instanceof Array) {
           imageId = [imageId];
         }
-        var checkStorage = browser.storage.local.get("firefox-uploader-imgur").then((obj) => {
-            var send = [];
+
+        const checkStorage = browser.storage.local.get("firefox-uploader-imgur").then((obj) => {
+            const send = [];
             for (let img of obj['firefox-uploader-imgur']) {
                 if (imageId.indexOf(img.id) >= 0) {
                     console.log(imageId);
                     console.log(status);
-                    for (var property in status) {
+                    for (let property in status) {
                         if (status.hasOwnProperty(property)) {
                             img[property] = status[property];
                         }
