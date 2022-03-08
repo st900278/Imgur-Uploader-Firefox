@@ -77,7 +77,7 @@ browser.menus.create({
     id: "image-select",
     type: "normal",
     title: "Upload to Imgur",
-    contexts: ["all"],
+    contexts: ["image"],
     checked: false
 }, onCreated);
 
