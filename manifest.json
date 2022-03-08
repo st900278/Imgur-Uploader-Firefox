@@ -2,7 +2,7 @@
 
     "manifest_version": 2,
     "name": "Imgur-Uploader",
-    "version": "1.5.4",
+    "version": "1.5.5",
     "author": "oberonfrog",
     "homepage_url": "https://github.com/st900278/Imgur-Uploader-Firefox",
     "description": "Image Upload addon for firefox",

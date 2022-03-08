@@ -150,6 +150,7 @@ module.exports = function () {
             if (!imageId instanceof Array) {
                 imageId = [imageId];
             }
+
             var checkStorage = browser.storage.local.get("firefox-uploader-imgur").then(function (obj) {
                 var send = [];
                 var _iteratorNormalCompletion2 = true;
@@ -951,8 +952,9 @@ document.querySelector("#add-file").addEventListener('change', uploadFile, false
 
 window.addEventListener("paste", function (e) {
     var items = e.clipboardData.items;
-    for (var i = 0; i < items.length; i++) {
-        if (items[i].type.indexOf("image") == -1) continue;
+
+    var _loop = function _loop(i) {
+        if (items[i].type.indexOf("image") == -1) return "continue";
         console.log("test");
         var blob = items[i].getAsFile();
 
@@ -970,6 +972,12 @@ window.addEventListener("paste", function (e) {
         var URLObj = window.URL || window.webkitURL;
 
         img.src = URLObj.createObjectURL(blob);
+    };
+
+    for (var i = 0; i < items.length; i++) {
+        var _ret = _loop(i);
+
+        if (_ret === "continue") continue;
     }
 });
 

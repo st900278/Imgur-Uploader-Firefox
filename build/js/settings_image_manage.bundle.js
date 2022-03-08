@@ -150,6 +150,7 @@ module.exports = function () {
             if (!imageId instanceof Array) {
                 imageId = [imageId];
             }
+
             var checkStorage = browser.storage.local.get("firefox-uploader-imgur").then(function (obj) {
                 var send = [];
                 var _iteratorNormalCompletion2 = true;

@@ -150,6 +150,7 @@ module.exports = function () {
             if (!imageId instanceof Array) {
                 imageId = [imageId];
             }
+
             var checkStorage = browser.storage.local.get("firefox-uploader-imgur").then(function (obj) {
                 var send = [];
                 var _iteratorNormalCompletion2 = true;
@@ -328,12 +329,12 @@ document.addEventListener('click', function (e) {
     if (hasClass(e.target, 'clear-all')) {
         //storage.removeAll();
 
-        var link = document.querySelectorAll(".image-url");
+        var _link = document.querySelectorAll(".image-url");
         var manipulateList = [];
-        for (var i = 0; i < link.length; i++) {
-            console.log(link[i].querySelector(".close-button").id);
-            manipulateList.push(link[i].querySelector(".close-button").id.split("-close")[0]);
-            link[i].parentNode.removeChild(link[i]);
+        for (var i = 0; i < _link.length; i++) {
+            console.log(_link[i].querySelector(".close-button").id);
+            manipulateList.push(_link[i].querySelector(".close-button").id.split("-close")[0]);
+            _link[i].parentNode.removeChild(_link[i]);
         }
         storage.change(manipulateList, { "viewable": false });
     }
@@ -376,6 +377,7 @@ document.querySelector("#add-image").addEventListener('click', function () {
         left: 100,
         allowScriptsToClose: true
     };
+
     var creating = browser.windows.create(createData);
     console.log("test");
 });

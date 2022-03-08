@@ -1,0 +1,15 @@
+to make source code to xpi,
+
+1. make sure you are in the root directory of this source
+
+2. please type in following command
+
+zip -r build build icons templates LICENSE manifest.json README.md build_instruction.txt
+
+3. the created build.zip is the xpi file.
+
+
+otherwise
+
+you can simply use any software to zip following directory and files
+"build", "icons", "templates", "LICENSE", "manifest.json", "README.md", "build_instruction"
