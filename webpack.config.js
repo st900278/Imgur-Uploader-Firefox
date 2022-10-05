@@ -17,12 +17,12 @@ module.exports = {
     devtool: 'source-map',
 
     module:{
-        loaders:[
+        rules:[
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 loader: "babel-loader",
-                query: {
+                options: {
                     presets: ['babel-preset-es2015']
                 }
             }
